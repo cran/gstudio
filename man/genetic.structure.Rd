@@ -3,7 +3,8 @@
 \title{Main function for estimating genetic structure parameters}
 \usage{
   genetic.structure(pop = NULL, stratum = NULL, loci =
-  NULL, mode = c("Gst", "Gst.prime", "Dest"), num.perm = 0)
+  NULL, mode = c("Gst", "Gst.prime", "Dest"), num.perm = 0,
+  verbose = FALSE)
 }
 \arguments{
   \item{pop}{A \code{\linkS4class{Population}} object}
@@ -21,6 +22,9 @@
   \item{num.perm}{The number of permutations to used for
   significance testing. All significance is tested using
   permutation of individuals.}
+
+  \item{verbose}{A logical flag to indicate the locus
+  progress (default=FALSE)}
 }
 \value{
   A \code{genetic.structure} object that has overloaded

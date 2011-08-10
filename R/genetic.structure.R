@@ -15,6 +15,7 @@
 #' 	"Gst", "Gst.prime", and "Dest".
 #' @param num.perm The number of permutations to used for significance testing.
 #'	All significance is tested using permutation of individuals.
+#' @param verbose A logical flag to indicate the locus progress (default=FALSE)
 #' @return A \code{genetic.structure} object that has overloaded
 #'	\code{print}, \code{summary}, and \code{plot} functions.
 #' @seealso \code{\link{print.genetic.structure}}, 
@@ -33,7 +34,8 @@ genetic.structure <- function( 	pop=NULL,
 								stratum=NULL,
 								loci=NULL,
 								mode=c("Gst","Gst.prime","Dest"),
-								num.perm=0
+								num.perm=0,
+								verbose=FALSE
 								)
 {
 	if( is.null(pop) || is.null(stratum) )
@@ -59,7 +61,7 @@ genetic.structure <- function( 	pop=NULL,
 	hs.mv <- 0
 	ht.mv <- 0
 	for( locus in loci ){
-		cat("Locus: ",locus)
+		if( verbose ) cat("Locus: ",locus)
 		alleles <- all.alleles[[locus]]
 		inds <- matrix( unlist( lapply(pop[[locus]],
 					function(loc,alleles) 
@@ -101,7 +103,7 @@ genetic.structure <- function( 	pop=NULL,
 				ret$estimate[[locus]] <- D
 			}
 		
-			cat("; ", mode,"=",ret$estimate[[locus]])
+			if( verbose ) cat("; ", mode,"=",ret$estimate[[locus]])
 		
 			if( !missing(num.perm) && num.perm > 0 ){
 				perms <- rep(0,num.perm)
@@ -133,10 +135,10 @@ genetic.structure <- function( 	pop=NULL,
 			
 			
 			
-				cat("; P =",(1+sum(ret$null.distribution[[locus]]>=ret$estimate[[locus]]))/(1+num.perm))
+				if( verbose ) cat("; P =",(1+sum(ret$null.distribution[[locus]]>=ret$estimate[[locus]]))/(1+num.perm))
 			}
 		}
-		cat("\n")
+		if( verbose ) cat("\n")
 	}
 	
 	if( length(loci)> 1  ){
@@ -187,7 +189,7 @@ print.genetic.structure <- function(x,...) {
 #' Overload of plot function for structure statistic
 #' 
 #' @param x A \code{genetic.structure} object
-#' @param y A \code{genetic.structure} object
+#' @param y Ignored
 #' @param ... Ignored
 #' @author Rodney J. Dyer <rjdyer@@vcu.edu>
 #' @export

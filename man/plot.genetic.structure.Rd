@@ -7,7 +7,7 @@
 \arguments{
   \item{x}{A \code{genetic.structure} object}
 
-  \item{y}{A \code{genetic.structure} object}
+  \item{y}{Ignored}
 
   \item{...}{Ignored}
 }

@@ -15,6 +15,9 @@
 #' @param loci The subset of loci to use. If this is not given then all loci
 #'	in the population will be used (the default).
 #' @param alpha The alpha level at which you want the edges to be tested.
+#' @param lat The name of the latitude variable in \code{pop} (default="Latitude")
+#' @param lon The name of the longitude variable in \code{pop} (default="Longitude")
+#' @param grouping A stratum name for a coloring of the nodes (e.g., regions)
 #' @return An igraph object of the population graph with node names and sizes
 #'	as vertex attributes.
 #' @author Rodney J. Dyer <rjdyer@@vcu.edu>
@@ -23,7 +26,10 @@
 population.graph <- function( 	pop,
 								stratum=NULL,
 								loci=NULL,
-								alpha=0.05 ) {
+								alpha=0.05,
+								lat="Latitude",
+								lon="Longitude",
+								grouping=NULL ) {
 	if(!require(MASS))
 		stop("This function needs the MASS library, please install it")
 	if(!require(igraph))
@@ -82,14 +88,42 @@ population.graph <- function( 	pop,
 	D[ EED<=critVal ] <- 0
 	cat("done\n")
 
-	ret <- graph.adjacency(D,mode="undirected",weight=TRUE,diag=FALSE)
-	V(ret)$name <- names(allSD)
+	cat("Making graph... ")
+	graph <- graph.adjacency(D,mode="undirected",weight=TRUE,diag=FALSE)
+	popnames <- names(allSD)
+	cat("done\n")
+	V(graph)$name <- popnames
 	popSD <- unlist(lapply(allSD,function(x) sum(unlist(x)) ))
 	popSD <- popSD-min(popSD)
 	popSD <- popSD/max(popSD) * 15 + 5
-	V(ret)$size <- popSD
+	V(graph)$size <- popSD
 	
- 	return(ret)
+	# Do the latitude and longitude centroids if it is in the data
+	if( (lat %in% names(pop)) && (lon %in% names(pop)) ){
+		lats <- numeric(0)
+		lons <- numeric(0)
+		for(name in popnames) {
+			subpop <- pop[pop[[stratum]]==name]
+			mu.lat <- mean(subpop[[lat]])
+			mu.lon <- mean(subpop[[lon]])
+			lats <- append(lats,mu.lat)
+			lons <- append(lons,mu.lon)
+		}
+		V(graph)$latitude <- lats
+		V(graph)$longitude <- lons
+	}
+	
+	# make the colors of the nodes and apply grouping if necessary.
+	colors <- rep("#4362FB",length(popnames))
+	if(!missing(grouping) && (grouping %in% names(pop))){
+		grps <- as.factor(as.character(pop[[grouping]]))
+		n <- length(levels(grps))
+		cols <- c(hcl(h=seq(0,(n-1)/(n),length=n)*360,c=100,l=65,fixup=TRUE))
+		colors <- cols[as.numeric(grps)]
+	}
+	V(graph)$color <- colors
+	
+ 	return(graph)
 };
 
 

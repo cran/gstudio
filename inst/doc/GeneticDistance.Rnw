@@ -1,12 +1,9 @@
 %
-%  Dyerlab Documentation: untitled
+%  GStudio Documentation: GeneticDistance
 %
 %  Created by dyer on 2011-07-20.
 \documentclass[letterpaper]{article}
 \usepackage[margin=1in]{geometry}
-\usepackage[T1]{fontenc}
-\usepackage[scaled]{helvet}
-\renewcommand*\familydefault{\sfdefault}
 \usepackage{Sweave}
 \usepackage[parfill]{parskip}
 \usepackage{color}
@@ -311,12 +308,11 @@ Conditional genetic distance ($cGD$, Dyer et al. 2010) is a graph-theoretic gene
 Under models with restrictions in gene flow, there is an expectation that genetic distance should increase with physical separation.  Using populations found along the Baja Peninsula, it is pretty easy to see which one of these among-strata distance approaches provides a better fit to the data.
 
 <<label=sonora_strata_dist,echo=true,fig=true,include=F>>=
-require(fields)
 baja <- araptus_attenuatus[araptus_attenuatus$Species != "CladeB", ]
 euc <- genetic.distance(baja,"Pop","EN","Euclidean")$EN
 cav <- genetic.distance(baja,"Pop","EN","Cavalli")$EN
 nei <- genetic.distance(baja,"Pop","EN","Nei")$EN
-phys <- rdist( unique( cbind( baja$Long, baja$Lat ) ))
+phys <- stratum.distance(baja,"Pop",lat="Lat",lon="Long")
 df <- data.frame(Euclidean=euc[lower.tri(euc)], Cavalli=cav[lower.tri(cav)], Nei=nei[lower.tri(nei)], Physical.Dist=phys[lower.tri(phys)] )
 pairs( df )
 cor(df)
@@ -330,16 +326,6 @@ cor(df)
 	\label{fig:sonora_strata_dist}
 \end{figure}
 
-
-
-\clearpage
-
-\section*{Exercises}
-
-\begin{enumerate}
-	\item Using the 2-D geometry in Figure \ref{fig:amova_geometry}, what is the distance between to heterozygotes that do not share any alleles (e.g., a 4-allele locus)?
-	\item To what extent are Cavalli-Sforza, Nei, and cGD correlated?
-\end{enumerate}
 
 
 \section*{Bibliography}

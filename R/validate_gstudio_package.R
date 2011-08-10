@@ -10,11 +10,13 @@
 #'
 #' @name validate_gstudio_tests
 #' @author Rodney J. Dyer <rjdyer@@vcu.edu>
+
+
 validate_gstudio_package <- function() {
 	require(RUnit)
 	rm(list=ls())
 		
-	files_to_exclude = c("validate_gstudio_package.R","gstudio-package.R","population.graph.R")
+	files_to_exclude = c("validate_gstudio_package.R","gstudio-package.R")
 
 	source_files <- list.files( pattern="\\w+\\.R$")
 
@@ -24,7 +26,7 @@ validate_gstudio_package <- function() {
 			source(file)
 		}
 	}
-
+	
 
 	test.suite <- defineTestSuite("gstudio_testsuite",
 	dirs=file.path("../tests"),

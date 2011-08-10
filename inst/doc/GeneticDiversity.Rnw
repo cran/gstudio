@@ -1,0 +1,98 @@
+%
+%  GStudio Documentation: GeneticDiversity
+%
+%  Created by dyer on 2011-08-24.
+\documentclass[letterpaper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath} % for better align*
+\usepackage{Sweave}
+\usepackage[parfill]{parskip}
+\usepackage{color}
+
+
+\title{Genetic Diversity}
+\author{Rodney J. Dyer\\\small Department of Biology\\\small Virginia Commonwealth University\\\footnotesize http://dyerlab.bio.vcu.edu}
+\date{}
+
+
+%\VignetteIndexEntry{Genetic Diversity}
+
+
+\begin{document}
+\maketitle
+
+\section*{Synopsis}
+
+Genetic diversity is measure of within stratum variance and there are several methods available for the estimation of diversity.  In a general sense, we will be using measures of allelic richness from the Baja California data set, which can easily be found my examining the \texttt{Frequencies} of the loci.
+
+<<>>=
+require(gstudio)
+data(araptus_attenuatus)
+baja <- araptus_attenuatus[araptus_attenuatus$Species != "CladeB",]
+freqs <- allele.frequencies(baja)
+freqs$LTRS
+freqs$MP20
+@
+
+In this data set, the raw allelic diversity across all the samples range from \Sexpr{length(freqs$LTRS)} - \Sexpr{length(freqs$MP20)} alleles.  However, using a base approach such as this falls short for several reasons:
+
+\begin{enumerate}
+	\item We are only looking at the number of alleles across the entire data set and there are many cases where it may be of interest to look at allelic diversity within substrata.  It is possible to use the \texttt{partition} function along with \texttt{allele.frequencies} to get to the number of alleles at partitions but the problem with that is:
+	\item The raw number of alleles depends upon the number of individuals sampled.  It is not statistically sound to compare raw diversity of stratum with different numbers of individuals.  This is where \emph{rarefaction} comes in.
+	\item The sole number of alleles present may not be as important as other measures of genetic diversity such as the diversity of non-rare alleles, or the average 'effective' number of alleles.
+\end{enumerate}
+
+To overcome both of these issues, the \texttt{genetic.diversity} function is used.
+
+\subsection*{Rarefaction}
+
+Before we get into the nitty-gritty, the basic concept of rarefaction should be examined.  Rarefaction is a permutation technique that can be used to standardize samples based upon sample allocation and is an old friend to ecologists.  
+
+For our purposes, we will consider rarefaction as a subsampling of alleles in strata standardized by the size of the smallest stratum.  So if we have one population with 10 individuals (20 alleles if the locus is diploid) and the rest of the populations have 50 individuals (100 alleles), a rarefied comparison of diversity should be based upon sampling of 20 alleles.
+
+The function \texttt{genetic.diversity} takes random samples of the alleles within each population and recomputes the requested allelic diversity statistic.  While in many ecological studies, rarefaction is depicted as an accumulation curve (they are generally interested in sampling intensity), \texttt{genetic.diversity} only reports the distribution at the largest size where all strata are equal (e.g., the number of alleles present in the smallest population). 
+
+\section*{Allelic Diversity: $A$}
+
+The parameter \emph{A} is solely a measure of the number of alleles at a locus.  If a population has a single individual with a single copy of allele $A$ and everyone else has allele $C$, $A=2$, which is the same case as if half the population was homozygous for $A$ and the remaining individuals were homozygous for $C$.  The function \texttt{genetic.diversity} returns an object that can be both printed and examined in plot fashion (by default it is a boxplot)
+
+<<echo=true,fig=true,include=true>>=
+A <- genetic.diversity(baja,stratum="Cluster",loci="MP20",mode="A")
+A
+plot(A)
+@
+
+The plot itself is a horizontal \texttt{boxplot}.  If you conduct the analysis with either the \texttt{loci} missing or as a list of loci, the results from each locus will be displayed in the terminal and the plotting will cycle through each locus requiring some input from the keyboard.  It is also possible to plot just a single locus by passing the locus name as a second parameter to the \texttt{plot} command.
+
+\section*{Allelic Diversity of Non-Rare Alleles: $A_{95}$}
+
+The parameter $A_{95}$ ignores rare alleles by not counting those whose frequencies are below 95\% \emph{within} the stratum.  So alleles locally rare will not be counted and in general $A >= A_{95}$.
+
+<<echo=true,fig=true,include=true>>=
+A95 <- genetic.diversity(baja,stratum="Cluster",loci="MP20",mode="A95")
+A95
+plot(A95)
+@
+
+
+\section*{Effective Allelic Diversity: $A_e$}
+
+The last diversity statistic is $A_e$, which is another frequency corrected allelic diversity statistic.  For a locus with $\ell$ alleles, each of which occurs at a frequency of $p_i$, the effective number of alleles is:
+
+\begin{equation}
+	A_e = \frac{1}{\sum_{i=1}^\ell p_i^2}
+\end{equation}
+
+And for the example data:
+
+<<echo=true,fig=true,include=true>>=
+Ae <- genetic.diversity(baja,stratum="Cluster",loci="MP20",mode="Ae")
+Ae
+plot(Ae)
+@
+
+One obvious difference in $A_e$ from the others is that it is not an integer value (both $A$ and $A95$ are integers) and as such can show a bit more granularity.
+
+
+
+\end{document}

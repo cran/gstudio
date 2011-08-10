@@ -1,12 +1,9 @@
 %
-%  Dyerlab Documentation: untitled
+%  GStudio Documentation: AlleleFrequencies
 %
 %  Created by dyer on 2011-07-20.
 \documentclass[letterpaper]{article}
 \usepackage[margin=1in]{geometry}
-\usepackage[T1]{fontenc}
-\usepackage[scaled]{helvet}
-\renewcommand*\familydefault{\sfdefault}
 \usepackage{Sweave}
 \usepackage[parfill]{parskip}
 \usepackage{color}
@@ -18,7 +15,7 @@
 
 
 
-%\VignetteIndexEntry{Genetic Summaries}
+%\VignetteIndexEntry{Allele Frequencies}
 
 
 \begin{document}
@@ -136,19 +133,10 @@ plot(pop.coords, bty="n", xlab="Longitude", ylab="Latitude",asp=1,cex=2*unlist(p
 
 \begin{figure}[bth]
 	\centering
-	\includegraphics{GeneticSummaries-araptus_he}
+	\includegraphics{AlleleFrequencies-araptus_he}
 	\caption{Heterozygosity of \emph{Araptus attenuatus} populations (depicted by symbol size) on the peninsula of Baja California.}
 	\label{fig:araptus_he}
 \end{figure}
 
-
-
-\clearpage
-\section*{Exercises}
-
-
-\begin{enumerate}
-	\item Can you plot allele frequencies as a function of latitude araptus data set?  Are there any blatant gradients?
-\end{enumerate}
 
 \end{document}

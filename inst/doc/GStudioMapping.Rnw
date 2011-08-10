@@ -1,0 +1,70 @@
+%
+%  GStudio Documentation: GStudioMapping
+%
+%  Created by dyer on 2011-07-20.
+\documentclass[letterpaper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{Sweave}
+\usepackage[parfill]{parskip}
+\usepackage{color}
+
+
+\title{Mapping in GStudio}
+\author{Rodney J. Dyer\\\small Department of Biology\\\small Virginia Commonwealth University\\\footnotesize http://dyerlab.bio.vcu.edu}
+\date{}
+
+
+%\VignetteIndexEntry{GStudio Mapping}
+
+
+\begin{document}
+\maketitle
+
+\section*{Synopsis}
+
+This vignette goes over some of the methodologies available for creating google KML files to display aspects of genetic data in either Google Earth, Google Maps, or even as an import into Arc.  These functions are part of an extension package \texttt{gstudio-sp} that extends the \texttt{gstudio} package by adding spatial components. They are kept separate from the rest of the \texttt{gstudio} package because one may not need to use the spatial components every time.
+
+Here the \emph{Araptus attenuatus} data set will be used and in particular the subset of populations that formed the disconnected subgraph in the \emph{Population Graphs} vignette from the \texttt{gstudio} package.
+
+<<>>=
+require(gstudio)
+data(araptus_attenuatus)
+baja <- araptus_attenuatus[araptus_attenuatus$Pop %in% c("88","9","84","177","175","173","171","89","159")]
+@
+
+
+\section*{Pies On Maps}
+
+Often it is of interest to look at global changes in allele frequencies.  While it is true that the frequency of an allele or set of alleles can be plot as a function of latitude or longitude, there is also value in putting it on a map. The function \texttt{pies.on.map} takes a \texttt{Population} file, a stratum, a list of loci, and some coordinate names in the population.  In most of the functions in \texttt{spgen} if you have your latitude and longitude variables labeled "Latitude" and "Longitude", you do not need to specify them in the function call. 
+
+<<eval=false,echo=true>>=
+pies.on.map(filename="~/Desktop/Baja.pies.kml",pop=baja,stratum="Pop",loci=c("EN","LTRS"),lat="Lat",lon="Long")
+@
+
+This creates a KML file that you can open in Google Earth and looks something like Figure \ref{fig:baja.pies}
+
+\begin{figure}[p]
+	\centering
+	\includegraphics{baja_pies}
+	\caption{Allele frequencies for locus 'EN' in \emph{Araptus attenuatus}.}
+	\label{fig:baja.pies}
+\end{figure}
+
+\clearpage
+\section*{Population Graphs On Maps}
+
+It is also helpful to put graph topologies on a map.  Here a population graph is created using the wrapper function \texttt{spatial.population.graph}.  This function adds latitude, longitude, and colors as properties to a normal population graph and is required for spatial plotting.  You can add these properties yourself if you like (use the \texttt{list.vertex.properties} function to see what is different) to a normal graph or you can just make the graph using this function.
+
+<<eval=false,echo=true>>=
+graph <- spatial.population.graph(pop="baja",stratum="Pop",lat="Lat",lon="Long")
+popgraph.on.map(graph,filename="~/Desktop/popgraph.on.map.kml")
+@
+
+\begin{figure}[h]
+	\centering
+	\includegraphics{baja_graph}
+	\caption{Population graph for the northern group of \emph{Araptus attenuatus} populations.}
+	\label{fig:baja.graph}
+\end{figure}
+
+\end{document}

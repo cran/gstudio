@@ -1,0 +1,30 @@
+2011-08-12 Rodney J. Dyer <rjdyer@vcu.edu> version = 0.01
+- [NEW] S4 class for Locus
+- [NEW] S4 class for Population
+- [NEW] S4 class forAlleleFrequencies
+- [NEW] genetic.distance() 
+- [NEW] genetic.structure() 
+- [NEW] read.population()
+- [NEW] population.graph()
+
+2011-08-26 Rodney J. Dyer <rjdyer@vcu.edu> version = 0.02
+- [FIX] Vignette names (popgraph was coming out as genetic structure) and new vignettes for the offspring analysis
+- [ADD] option 'verbose' for genetic.structure to toggle printing of progress for longer jobs.
+- [NEW] great.circle.distance() and stratum.distance() functions added to calculate physical separation amongst
+	sites.
+- [NEW] google.pie.chart() function to make pie icons for population plotting
+- [NEW] pies.on.map() function to create KML file for examining allele frequencies of strata
+- [CHANGE] population.graph() added routines to incorporate latitude, longitude, and grouping 
+	into the graph representation for spatial plotting.
+- [NEW] popgraph.on.map() function to create KML file for population graphs
+- [NEW] genetic.diversity() function to estimate diversity statistics using rarefaction.
+- [NEW] Vignette on genetic.diversity
+- [NEW] Vignette on mapping 'GStudio Mapping'
+- [NEW] stratum.distance() function to get physical distances between populations.
+
+UPCOMING:
+- [ADD] Congruence of topologies for population graphs
+- [ADD] as.html option for mapping functions to create googlemap javascript maps instead of kml files.
+- [ADD] Example of amova in genetic.structure
+- [ADD] Fst (coalescent time) added to genetic.structure
+- [ADD] add drop.one option to multivariate.loci option

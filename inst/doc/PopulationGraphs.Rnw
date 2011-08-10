@@ -1,12 +1,9 @@
 %
-%  Dyerlab Documentation: untitled
+%  GStudio Documentation: untitled
 %
 %  Created by dyer on 2011-07-20.
 \documentclass[letterpaper]{article}
 \usepackage[margin=1in]{geometry}
-\usepackage[T1]{fontenc}
-\usepackage[scaled]{helvet}
-\renewcommand*\familydefault{\sfdefault}
 \usepackage{amsmath} % for better align*
 \usepackage{Sweave}
 \usepackage[parfill]{parskip}
@@ -18,7 +15,7 @@
 \date{}
 
 
-%\VignetteIndexEntry{Genetic Structure}
+%\VignetteIndexEntry{Population Graphs}
 
 
 \begin{document}
@@ -124,12 +121,7 @@ As discussed previously, we can also get the pair-wise physical distance and the
 
 <<echo=true,fig=true,include=true>>=
 pops <- V(med.graph)$name
-coords <- lapply( pops, function(pop){ 
-		c( mean( baja$Long[baja$Pop==pop]), mean(baja$Lat[baja$Pop==pop]))})
-coords <-matrix(unlist(coords),ncol=2,byrow=T)
-coords
-require(fields,quietly=T)
-P <- rdist(coords)
+P <- stratum.distance(baja.cladeC,"Pop",lat="Lat",lon="Long",subset=pops)
 plot(D[lower.tri(D)] ~ P[lower.tri(P)], bty="n",xlab="Physical Distance",ylab="Graph Distance")
 @
 

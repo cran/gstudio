@@ -765,7 +765,7 @@ setMethod("partition",
 		ret <- list()
 		idx <- which( stratum==names(pop))
 		if( length(idx) ) {
-			subpops <- unique( pop@values[[stratum]])
+			subpops <- sort(unique( pop@values[[stratum]]))
 			for(name in subpops ){
 				ret[[name]] <- pop[ pop[,idx]==name , ]
 				ret[[name]][,idx] <- NULL

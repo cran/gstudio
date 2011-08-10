@@ -1,12 +1,9 @@
 %
-%  Dyerlab Documentation: untitled
+%  GStudio Documentation: GeneticStructure
 %
 %  Created by dyer on 2011-07-20.
 \documentclass[letterpaper]{article}
 \usepackage[margin=1in]{geometry}
-\usepackage[T1]{fontenc}
-\usepackage[scaled]{helvet}
-\renewcommand*\familydefault{\sfdefault}
 \usepackage{amsmath} % for better align*
 \usepackage{Sweave}
 \usepackage[parfill]{parskip}
