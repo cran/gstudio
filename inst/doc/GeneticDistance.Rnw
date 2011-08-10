@@ -1,0 +1,357 @@
+%
+%  Dyerlab Documentation: untitled
+%
+%  Created by dyer on 2011-07-20.
+\documentclass[letterpaper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[scaled]{helvet}
+\renewcommand*\familydefault{\sfdefault}
+\usepackage{Sweave}
+\usepackage[parfill]{parskip}
+\usepackage{color}
+\usepackage{amssymb}
+\usepackage{curves}
+
+\title{Genetic Distance}
+\author{Rodney J. Dyer\\\small Department of Biology\\\small Virginia Commonwealth University\\\footnotesize http://dyerlab.bio.vcu.edu}
+\date{}
+
+
+
+%\VignetteIndexEntry{Genetic Distances}
+
+
+\begin{document}
+\maketitle
+
+\section*{Synopsis}
+
+The analysis of genetic data is largely an analysis of distances; distances among frequencies, distances among centroids of populations, etc.
+
+\section*{Genetic Distances Among Individuals}
+
+In these examples, the data from \emph{Araptus attenuatus} will be used again but this time we'll use the subset of individuals from "CladeB" (mainland populations).
+
+<<>>=
+require(gstudio)
+data(araptus_attenuatus)
+sonora <- araptus_attenuatus[ araptus_attenuatus$Species=="CladeB" , ]
+summary(sonora)
+@
+
+\subsection*{Jaccard Distance}
+
+Jaccard distance is a set-theoretic distance quantifying dissimilarity.  Assuming that loci are sets of alleles, the Jaccard dissimilarity between genotypes $A$ and $B$ is given by:
+
+\begin{equation}
+	J_\delta(A,B) = \frac{|A \bigcup B| - |A \bigcap B|}{|A \bigcup B|}
+\end{equation}
+
+Using the \texttt{LTRS} locus, we compute this distance as:
+
+<<>>=
+d.jaccard <- genetic.distance(sonora,stratum="Pop",loci="EN",mode="Jaccard")
+dim(d.jaccard$LTRS)
+@
+
+YOu can look at the elements of the LTRS matrix (it is 36x36 so I am not printing it out here).  With \texttt{mode="Jaccard"}, missing genotypes will result in \texttt{NA} rows and columns in the distance matrix.  It is no entirely clear how this metric can easily handle missing genotypes.
+
+\subsection*{Bray-Curtis Distance}
+
+Bray-Curtis Distance (Bray \& Curtis 1957) has been primarily used to quantify differences in species composition.  It is defined as the total number of species that are unique to either of the two sites standardized by the number of species in both sites.  
+
+\begin{equation}
+	BC_\delta = \frac{S_i + S_j - 2S_{ij}}{S_i+S_j}
+\end{equation}
+
+where $S_x$ is the species count and $S_{ij}$ is the sum of minimum abundances.  Lately, this has seen considerable use within individual-based landscape genetic studies.  Missing genotypes are set to average allele frequencies, that is to say that every missing genotype is considered to have all the alleles present in the entire population, but with probability equal to their global frequencies.  Essentially, this removes the \texttt{NA} problem like in the \texttt{mode="Jaccard"} situation and does so by taking the non-missing genotype's genetic distance from the global genetic centroid (it's cosmic man!).  Here is the estimation using two loci.
+
+<<>>=
+d.bray <- genetic.distance(sonora,stratum="Pop",loci=c("LTRS","EN"),mode="Bray")
+summary(d.bray)
+@
+
+\subsection*{AMOVA Distance}
+
+The final individual-based approach is based upon the Analysis of Molecular Variance (AMOVA) analysis.  A geometric interpretation of this genetic distance is given in Figure \ref{fig:amova_geometry} indicating distances among diploid genotypes.  
+
+\begin{figure}[b]
+	\centering
+	\setlength{\unitlength}{2cm}
+	\begin{picture}(3,2)
+		\put(.8,.8){BB}
+		\put(3,.8){CC}
+		\put(1.88,2.02){AA}
+		\put(1.2,1.5){AB}
+		\put(2.6,1.5){AC}
+		\put(1.88,.8){BC}
+		\color{blue}
+		\put(1.5,1.5){\line(1,-1){.5}}
+		\put(2,2){\line(0,-1){1}}
+		\color{black}
+		\thicklines
+		\put(1,1){\line(1,0){2}}
+		\put(1,1){\line(1,1){1}}
+		\put(3,1){\line(-1,1){1}}
+		\color{red}
+		\put(2,1.2){$\sqrt{3}$}
+		\put(1.08,1.2){1}
+		\put(1.64,1.75){1}
+	\end{picture}
+	\caption{Geometry of AMOVA distances.  The resulting squared distance is the square of the geometric distance.}
+	\label{fig:amova_geometry}
+\end{figure}
+
+Algebraically, we can define an individual locus using a multivariate vector as an allele coding vector.  The \texttt{Locus} class has a method, \texttt{as.multivariate}, that does the translation.  The distance between the two alleles is defined as:
+
+\begin{equation}
+	\delta_{ij}^2 = 2(p_i-p_j)^2
+\end{equation}
+
+as shown below.
+
+
+The amova distance is simply the vector distance between these two vectors as demonstrated below
+
+<<>>=
+locAA <- Locus( c("A","A") )
+locBB <- Locus( c("B","B") )
+locAB <- Locus( c("A","B") )
+locBC <- Locus( c("B","C") )
+vAA <- as.vector( locAA, c("A","B","C") )
+vBB <- as.vector( locBB, c("A","B","C") )
+vAB <- as.vector( locAB, c("A","B","C") )
+vBC <- as.vector( locBC, c("A","B","C") )
+dist.AA.BB <- 2*( (vAA - vBB) %*% (vAA - vBB) )
+dist.AA.BB
+dist.AA.AB <- 2*( (vAA - vAB) %*% (vAA - vAB) )
+dist.AA.AB
+dist.AA.BC <- 2*( (vAA - vBC) %*% (vAA - vBC) )
+dist.AA.BC
+@
+
+While we will deal more with the AMOVA analysis in the section on Genetic Structure, the AMOVA genetic distance matrix can be estimated as follows, this time using \emph{all} the loci. This metric is additive across loci, so only a single distance matrix is returned.  The \texttt{list} key for the multilocus parameters is a list of the locus names, joined using a period.
+
+<<>>=
+d.amova <- genetic.distance(sonora,stratum="Pop",mode="AMOVA",loci="EN")
+summary(d.amova)
+@
+
+
+There are several other measures of individual-to-individual distance such as relatedness and coancestry.  These are not currently implemented in \texttt{R} but may become available in the near future.  That being said, it is probably something not too difficult for someone to extend these functions with their own code.
+
+\subsection*{Differences Between Distances}
+
+These three distances are correlated, and here we can look at how close they are for this three allele locus in \emph{Euphorbia lomelii}.  They will be transformed from a \texttt{dist} matrix object into columns within a \texttt{data.frame} and then their relationship can be tested using \texttt{cor.test}.
+
+<<label=sonora_ind_dist,echo=true,fig=true,include=F>>=
+df <- data.frame( jaccard = d.jaccard$EN[lower.tri(d.jaccard$EN)],bray = d.bray$EN[lower.tri(d.bray$EN)], amova = d.amova$EN[lower.tri(d.amova$EN)])
+summary(df)
+cor(df)
+pairs(df)
+@
+
+\begin{figure}[bth]
+	\centering
+	\includegraphics{GeneticDistance-sonora_ind_dist}
+	\caption{Relationship among three individual genetic distance metrics estimated for individual \emph{Araptus attenuatus} individuals in Sonora \& Sinoloa, Mexico.}
+	\label{fig:sonora_ind_dist}
+\end{figure}
+
+
+
+
+\clearpage
+
+\section*{Genetic Distance Among Strata}
+
+
+Genetic distances can also be estimated among groups of individuals.  The same data will be used here but since there are only three populations, we'll be able to see the whole distance matrix. 
+
+
+\subsection*{Euclidean Distance}
+
+Euclidean distance is the most straight-forward distance metric available as it is essentially straight-line distance based upon the allele frequencies in each population.  It is given by:
+
+\[
+	d_{eucl} = \sqrt{ \sum_{j=1}^L(p_{ij} - p_{kj})^2 }
+\]
+
+
+\begin{figure}[h!]
+	\centering
+	\setlength{\unitlength}{2cm}
+	\begin{picture}(3,2)
+		\put(0.08,0.08){0}
+		\put(.8,0){$p_1$} 
+		\put(0,.8){$p_2$}
+		\put(0,1.5){1}
+		\put(1.5,0){1}
+		\thicklines
+		\put(0.2,0.2){\vector(1,0){1.5}}
+		\put(0.2,0.2){\vector(0,1){1.5}}
+		\thinlines
+		\put(0.6,1.39){\line(-1,0){0.4}}
+		\put(0.6,1.39){\line(0,-1){1.19}}
+		\put(1.39,0.6){\line(-1,0){1.19}}
+		\put(1.39,0.6){\line(0,-1){0.4}}
+		\color{red}
+		\put(1.5,.6){X}
+		\put(1.39,0.6){\circle*{.09}}
+		\put(.6,1.5){Y}
+		\put(0.6,1.39){\circle*{.09}}
+		\color{black}
+		\put(1.2,0){\footnotesize$p_{1,X}$}		
+		\put(-.10,0.6){\footnotesize$p_{2,X}$}
+		\put(-.10,1.39){\footnotesize$p_{2,Y}$}
+		\put(0.4,0){\footnotesize$p_{1,Y}$}
+		\thicklines
+		\put(0.69,1.3){\vector(1,-1){.65}}
+		\put(1.3,0.69){\vector(-1,1){.65}}	
+	\end{picture}
+	\caption{Geometry of euclidean distance based upon a two-allele locus denoted as frequencies $p_1$ \& $p_2$. }
+	\label{fig:eucl_geometry}
+\end{figure}
+
+where $p_{ij}$ and $p_{kj}$ are the frequencies of the $j^{th}$ allele in both the $i^{th}$ and $j^{th}$ population.  In this and the following distance examples, I am going to take the resulting distance matrix among all pairs of populations and put them into a Neighbor joining tree (via the \texttt{nj} function from the \texttt{ape} package) as it may be easier to see differences in topologies rather than matrices.
+
+It is perhaps easiest to think of Euclidean distance in x,y coordinate space (Figure \ref{fig:eucl_geometry}).  This distance can be estimated by \texttt{stratum.distance} using the optional parameter \texttt{method='eucl'} and it will return a \texttt{dist} matrix.
+
+Once the matrix has been estimated, you can visualize it in many ways.  One of the most straight-forward approaches it to visualizing the relationships among rows and columns is to put it into a bifurcating tree.  
+<<>>=
+d.eucl <- genetic.distance(sonora,stratum="Pop",loci="EN",mode="Euclidean")
+d.eucl
+@
+
+
+
+
+
+
+\subsection*{Cavalli-Sforza Distance}
+
+Another distance approach that is commonly used for microsatellite loci is Cavalli-Sforza distance, $D_C$ (Cavalli-Sforza and Edwards, 1967).  Here population allele frequencies are plot on the surface of a sphere (radius=1) using the square root of the allele frequencies.  
+
+\[
+	D_C = \frac{2}{\pi}\sqrt{(2-2cos\theta)}
+\]
+
+The genetic distance, $D_C$ is measured as the chord distance as indicated in Figure \ref{fig:cavalli_geometry}.  The resulting Neighbor joining tree from this distance is shown in Figure \ref{fig:cavalli_dist}
+
+\begin{figure}[htbp]
+	\centering
+	\setlength{\unitlength}{2cm}
+	\begin{picture}(3,2)
+		\put(0.08,0.08){0}
+		\put(0.7,0){$\sqrt{p_1}$} 
+		\put(-0.2,.8){$\sqrt{p_2}$}
+		\put(0,1.5){1}
+		\put(1.5,0){1}
+		\thicklines
+		\put(0.2,0.2){\vector(1,0){1.5}}
+		\put(0.2,0.2){\vector(0,1){1.5}}
+		\put(0.0,0.0){\arc(1.50,0.20){75}}
+		\color{red}
+		\put(1.5,.6){X}
+		\put(1.39,0.6){\circle*{.09}}
+		\put(.6,1.5){Y}
+		\put(0.6,1.39){\circle*{.09}}
+		\color{black}
+		\thicklines
+		\put(0.69,1.3){\vector(1,-1){.65}}
+		\put(1.3,0.69){\vector(-1,1){.65}}
+	\end{picture}
+	\caption{Geometry of Cavalli-Sforza distance.  Population allele frequencies at two loci are plot at$\sqrt{p_1}$ and $\sqrt{p_2}$ and $D_C$ is the chord between the populations.}
+	\label{fig:cavalli_dist}
+\end{figure}
+
+
+<<>>=
+d.cavalli <- genetic.distance(sonora,"Pop","EN","Cavalli")
+d.cavalli
+@
+
+
+
+
+\subsection*{Nei's Genetic Distance}
+
+Nei's genetic distance is based upon mutation drift equilibrium therefore you should be reasonably comfortable with the notion that your populations have been separated a sufficient period of time such that drift and mutation may have played a significant role in their structure.
+
+The formula for Nei's distance that is used here is: 
+
+\[
+	D_{Nei} = -ln\left(\frac{(2N-1)\sum_{i=1}^L\sum_{j=1}^\ell p_{ij,x}p_{ij,y}}{\sqrt{\sum_{i=1}^L(2N\sum_{j=1}^\ell p_{ij,x}-1)(2N\sum_{j=1}^\ell p_{ij,y}-1)}} \right)
+\]
+
+where the summation $L$ is across loci and $\ell$ is across alleles at each locus in population $x$ and $y$.
+
+
+
+<<>>=
+d.nei <- genetic.distance(sonora,"Pop","EN","Nei")
+d.nei
+@
+
+
+ 
+
+
+\subsection*{Conditional Genetic Distance}
+
+Conditional genetic distance ($cGD$, Dyer et al. 2010) is a graph-theoretic genetic distance derived from Population Graphs (Dyer and Nason 2004)
+
+
+
+
+\section*{Isolation-By-Distance}
+
+
+Under models with restrictions in gene flow, there is an expectation that genetic distance should increase with physical separation.  Using populations found along the Baja Peninsula, it is pretty easy to see which one of these among-strata distance approaches provides a better fit to the data.
+
+<<label=sonora_strata_dist,echo=true,fig=true,include=F>>=
+require(fields)
+baja <- araptus_attenuatus[araptus_attenuatus$Species != "CladeB", ]
+euc <- genetic.distance(baja,"Pop","EN","Euclidean")$EN
+cav <- genetic.distance(baja,"Pop","EN","Cavalli")$EN
+nei <- genetic.distance(baja,"Pop","EN","Nei")$EN
+phys <- rdist( unique( cbind( baja$Long, baja$Lat ) ))
+df <- data.frame(Euclidean=euc[lower.tri(euc)], Cavalli=cav[lower.tri(cav)], Nei=nei[lower.tri(nei)], Physical.Dist=phys[lower.tri(phys)] )
+pairs( df )
+cor(df)
+@
+
+
+\begin{figure}[bth]
+	\centering
+	\includegraphics{GeneticDistance-sonora_strata_dist}
+	\caption{Relationship among strata genetic distance metrics estimated for \emph{Araptus attenuatus} sites in Baja California along with physical distance.}
+	\label{fig:sonora_strata_dist}
+\end{figure}
+
+
+
+\clearpage
+
+\section*{Exercises}
+
+\begin{enumerate}
+	\item Using the 2-D geometry in Figure \ref{fig:amova_geometry}, what is the distance between to heterozygotes that do not share any alleles (e.g., a 4-allele locus)?
+	\item To what extent are Cavalli-Sforza, Nei, and cGD correlated?
+\end{enumerate}
+
+
+\section*{Bibliography}
+
+Bray, JR and JT Curtis  (1957) An ordination of upland forest communities of southern Wisconsin. \emph{Ecological Monographs} {\bf 27}:325-349.
+
+Cavalli-Sforza LL and AWF Edwards 1967. Phylogenetic analysis: models and estimation procedures. American Journal Human Genetics \textbf{19}: 233-257.
+
+Dyer RJ and JD Nason  2004  Population Graphs: The graph-theoretic shape of genetic structure.  Molecular Ecology \textbf{13}: 1713-1728.
+
+Dyer RJ, JD Nason, and RC Garrick 2010  Landscape modeling of gene flow: Improved power using conditional genetic distance derived from the topology of population networks.  Molecular Ecology \textbf{19}: 3746-3759.
+
+Smouse, PE and R Peakall (1999)  Genetics
+
+\end{document}

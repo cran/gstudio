@@ -1,0 +1,154 @@
+%
+%  Dyerlab Documentation: untitled
+%
+%  Created by dyer on 2011-07-20.
+\documentclass[letterpaper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[scaled]{helvet}
+\renewcommand*\familydefault{\sfdefault}
+\usepackage{Sweave}
+\usepackage[parfill]{parskip}
+\usepackage{color}
+
+
+\title{Summarizing Genetic Data}
+\author{Rodney J. Dyer\\\small Department of Biology\\\small Virginia Commonwealth University\\\footnotesize http://dyerlab.bio.vcu.edu}
+\date{}
+
+
+
+%\VignetteIndexEntry{Genetic Summaries}
+
+
+\begin{document}
+\maketitle
+
+\section*{Synopsis}
+
+There are several ways you can summarize genetic data and here we will cover some simple approaches and introduce another class that aids in the analysis of population genetic data.
+
+
+\section*{The \texttt{Frequencies} Class}
+
+The \texttt{Frequencies} class was designed to help out with allele frequency issues and provide a single interface from which you can extract frequency-related information.  At its most basic level, a new \texttt{Frequencies} object is created from a list of \texttt{Locus} objects.  
+
+<<>>=
+require(gstudio)
+loc1 <- Locus( c(1,2) )
+loc2 <- Locus( c(2,2) )
+loc3 <- Locus( c(2,2) )
+freqs <- Frequencies( c( loc1, loc2, loc3) )
+freqs
+@
+
+Estimates of allele frequencies can be extracted from the \texttt{Frequencies} class using the \texttt{get.frequencies} method.  This method needs to have the object and an optional list of alleles you are interested in getting frequencies for.  If you do not pass the second parameter, it will give you the frequencies for all the alleles it currently has.  If you do, it will give you the observed frequency of each (notice the value for the '42' allele)
+
+<<>>=
+names(freqs)
+length(freqs)
+get.frequencies( freqs ) 
+get.frequencies( freqs, c("1","42") )
+@
+
+
+
+\section*{Heterozygosities}
+
+A fundamental component of many population genetic analysis is the estimation of heterozygosity.  There are two basic types of heterozygosity, that which is expected under Hardy-Weinberg Equilibrium and that which was observed.  For simplicity, these are denoted as $H_{e}$ and $H_{o}$ in many common texts.
+
+Observed heterozygosity is probably the simplest of the two and it is simply the fraction of genotypes in the group you are looking at (could be a population or a region or a site) that are heterozygotes.  In terms of the \texttt{Locus} class, the function \texttt{is.heterozygote} returns \texttt{TRUE} if the locus has at least two alleles (allowing for ploidy levels in excess of 2) and at least two different alleles are present.  As part of the data accumulation process in the construction of an \texttt{AlleleFrequency} object, observed heterozygosity is recorded.
+
+Expected heterozygosity requires an assumption of equilibrium (in the most simple case).  For a diploid locus with alleles \texttt{A} \& \texttt{B} and frequencies of each allele denoted as $p_A$ \& $p_B$, genotypes are expected to occur at a frequency of:
+
+\begin{eqnarray*}
+	AA & \to &  p_A^2\\
+	AB & \to & 2*p_A*p_B \\
+	BB & \to &  p_B^2
+\end{eqnarray*}
+
+From the example set of loci we used above, the observed and expected frequencies are:
+
+<<>>=
+ho( freqs )
+he( freqs )
+@
+
+
+
+\section*{Allele Frequencies}
+
+
+The estimation of allele frequencies for a single site or population is probably one of the least informative summary approaches available.  It is the differences among sites \& populations and the various evolutionary and demographic processes that create these differences that are often of interest.
+
+There are several helper functions and methods that can be used to examine allele frequencies across strata.
+
+
+
+\subsection*{Getting Frequencies from Populations}
+
+The \texttt{Population} class has a method for returning an \texttt{AlleleFrequency} object for a particular locus.  This is mostly a convenience method that goes through all the \texttt{Indiviudal} objects in the \texttt{Population} and creates a new \texttt{AlleleFrequency} object for you.  As a single population you can grab it using the \texttt{allele.frequencies} routine.
+
+<<>>=
+data(araptus_attenuatus)
+araptus.ltrs.freq <- allele.frequencies(araptus_attenuatus,"LTRS")
+araptus.ltrs.freq
+@
+
+If you do not pass \texttt{get.frequencies} the optional \texttt{loci} parameter, it will return a \texttt{list} of \texttt{Frequency} objects for all loci.
+
+<<>>=
+all.freqs <- allele.frequencies(araptus_attenuatus)
+print(all.freqs[1:2])
+@
+
+With the \texttt{partition} method, you can take the entire data set and easily find allele frequencies for subsets of data.
+
+<<>>=
+clades <- partition(araptus_attenuatus,"Species")
+names(clades)
+cladeC.freqs <- allele.frequencies(clades$CladeC)
+summary(cladeC.freqs)
+summary(cladeC.freqs$AML)
+get.frequencies(cladeC.freqs$AML, 11)
+allele.frequencies( araptus_attenuatus[ araptus_attenuatus$Lat > 26.3 ,], loci="AML" )
+@
+
+
+\subsection*{Plotting Frequencies}
+
+The combination of \texttt{Population} and \texttt{Frequencies} can easily be used to explore population structure.  In the next snippet, we partition the dataset into populations along the Baja Peninsula and plot their locations (n.b., the \texttt{bty} option to plot removes the box around the image and the \texttt{asp} makes the axes equal).
+
+<<echo=true,fig=true>>=
+baja <- araptus_attenuatus[araptus_attenuatus$Species!="CladeB",]
+pop.coords <- unique( cbind( baja$Long, baja$Lat ) )
+plot(pop.coords, bty="n", xlab="Longitude", ylab="Latitude",asp=1)
+@
+
+Next, we can adjust the size of the symbol by diversity at any locus (below \texttt{LTRS} is used).  Here the \texttt{lapply} function is used to apply a function to the elements of the \texttt{baja.pops} list.  If you are not familiar with this function, you should look it up.  The resulting heterozyosity estimates are scaled and used as symbol size (via \texttt{cex}; Figure \ref{fig:araptus_he}).
+
+<<label=araptus_he,echo=true,fig=true,include=F>>=
+baja.pops <- partition( baja, "Pop" )
+pop.he <- lapply( baja.pops, function(x) he( Frequencies( x$LTRS ) ) )
+summary( unlist(pop.he) )
+plot(pop.coords, bty="n", xlab="Longitude", ylab="Latitude",asp=1,cex=2*unlist(pop.he)+1, main="Heterozygosity of LTRS")
+@
+
+\begin{figure}[bth]
+	\centering
+	\includegraphics{GeneticSummaries-araptus_he}
+	\caption{Heterozygosity of \emph{Araptus attenuatus} populations (depicted by symbol size) on the peninsula of Baja California.}
+	\label{fig:araptus_he}
+\end{figure}
+
+
+
+\clearpage
+\section*{Exercises}
+
+
+\begin{enumerate}
+	\item Can you plot allele frequencies as a function of latitude araptus data set?  Are there any blatant gradients?
+\end{enumerate}
+
+\end{document}

@@ -1,0 +1,211 @@
+%
+%  Dyerlab Documentation: untitled
+%
+%  Created by dyer on 2011-07-20.
+\documentclass[letterpaper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[scaled]{helvet}
+\renewcommand*\familydefault{\sfdefault}
+\usepackage{Sweave}
+\usepackage[parfill]{parskip}
+\usepackage{color}
+
+
+\title{Getting Genetic Data Into R}
+\author{Rodney J. Dyer\\\small Department of Biology\\\small Virginia Commonwealth University\\\footnotesize http://dyerlab.bio.vcu.edu}
+\date{}
+
+
+%\VignetteIndexEntry{Data Import}
+
+
+\begin{document}
+\maketitle
+
+\section*{Synopsis}
+
+Here you will learn to get genetic data files into the R environment using the \texttt{gstudio} package.  This package was designed to handle marker-based genetic data (e.g., not sequences \emph{per se} though it can use SNP's and haplotypes) as well as additional data that is typically collected along with individuals.  
+
+To get started, first import the \texttt{gstudio} package as:
+
+<<>>=
+require(gstudio)
+@
+
+
+
+\section*{The \texttt{Locus} Class}
+
+The locus class is the fundamental class that handles marker-based genetic data.  At present it can handle dominant and co-dominant marker types at any ploidy level.  Internally, alleles are stored as a \texttt{character} vector and by default they are not sorted so that the alleles will be presented in the order that you import them (e.g., a \texttt{3:1} locus instead of a \texttt{1:3} locus).  I do not sort these because it may be necessary to know the phase of the alleles in a locus and sorting them would remove that information.  If you abhor the sight of a genotype \texttt{3:1} then sort it earlier and then try to figure out why you have this affliction.  
+
+<<>>=
+loc1 <- Locus( c(120,122) )
+loc1
+loc2 <- Locus( c("A","T") )
+loc2
+@
+
+Note, that internally the alleles are translated into \texttt{character} objects.  In all the functions dealing with alleles both \texttt{integer} and \texttt{character} arguments are accepted.  There are several methods associated with the \texttt{Locus}, the main ones that you will be working with are shown below by example.  See \texttt{help("Locus-class")} for a complete discussion.
+
+
+<<>>=
+loc3 <- Locus( c(122,122) )
+loc3
+is.heterozygote( loc3 )
+loc3[2]
+loc3[2] <- "124"
+is.heterozygote( loc3 )
+length( loc3 )
+summary( loc3 )
+@
+
+Another useful method of the \texttt{Locus} class is the  \texttt{as.multivariate} function.  This translates the locus into a multivariate coding vector so you can do some real statistics with it.  Here is an example:
+
+
+<<>>=
+loc4 <- Locus( c("A","C") )
+loc4
+all.alleles <- c("A","G","C","T")
+all.alleles
+as.vector( loc4, all.alleles )
+@
+
+
+
+
+
+%-----------------------------------------------------------  Population Class
+%
+%
+\section*{The \texttt{Population} Class}
+
+You can think of a \texttt{Population} is a collection of one or more individuals.  While no man is an island, an individual is just a population of $N=1$.  Each individual, can have any number of \texttt{Locus} objects along with other non-genetic information associated with them (e.g., latitude, longitude, dbh, hair color, etc.).  You create a population by passing it data columns in much the same way as how you create a \texttt{data.frame} (in fact, the \texttt{Population} class is just a \texttt{data.frame} that knows how to deal with \texttt{Locus} objects and how to give you population genetic summaries).
+
+
+<<>>=
+strata <- c("A","A","B","B","B")
+TPI <- c(Locus(c(1,2)),Locus(c(2,3)),Locus(c(2,2)),Locus(c(2,2)),Locus(c(1,3)))
+PGM <- c(Locus(c(4,4)),Locus(c(4,3)),Locus(c(4,4)),Locus(c(3,4)),Locus(c(3,3)))
+Env <- c(12,20,14,18,10)
+thePop <- Population( Pop=strata, Env=Env, TPI=TPI, PGM=PGM )
+thePop
+summary(thePop)
+names(thePop)
+@
+
+
+\subsection*{Accessing \texttt{Population} Elements}
+
+You can also add data to a \texttt{Population} or remove it
+
+<<>>=
+WXY <- c(Locus(c(122,124)),Locus(c(124,126)),Locus(c(124,124)),Locus(c(122,124)),Locus(c(126,126)))
+thePop$WXY <- WXY
+thePop
+thePop$WXY <- NULL
+thePop
+@
+
+
+Similar to the previous constructs, you can access elements within a \texttt{Population} using either numerical indexes, slices, or names.
+
+<<>>=
+ind3 <- thePop[3,]
+ind3
+thePop[ thePop$Pop=="B", ]
+thePop[ thePop$Env<15 , ]
+TPI <- thePop[,3]
+print(TPI) 
+@
+
+
+\subsection*{Getting Data Types within \texttt{Population} Objects}
+
+Since a \texttt{Population} can hold several types of data and the main way to get data from one is to know its name, the method \texttt{column.names} can provide you quick access to all the data names of a specific R \texttt{class}.
+
+<<>>=
+strata <- column.names(thePop,"character")
+strata
+column.names(thePop,"Locus")
+column.names(thePop,"numeric")
+@
+
+
+\subsection*{Partitioning \texttt{Population} Objects}
+
+A \texttt{Population} object can contain individuals with several other categorical data variables (e.g., population, region, habitat, etc.) and it is relatively easy to get single elements (as shown in the slicing above) as well as complete partitions.  It should be pointed out that when you \texttt{partition} a \texttt{Population} on some stratum, it will remove that stratum from all the partitions though it will leave the other partitions in the subpopulations.
+
+<<>>=
+subpops <- partition(thePop,stratum="Pop")
+print(subpops)
+@
+
+
+\subsection*{Generic \texttt{Population} Functions}
+
+The following generic functions are available for the \texttt{Population} class and work just like they do using other data structures.
+
+\begin{description}
+	\item[length] The number of \texttt{Individual} objects (rows) in the \texttt{Population}.
+	\item[dim] The number or row and columns in the \texttt{Population}.
+	\item[names] The data column names.
+	\item[summary] A summary of the data columns in the \texttt{Population}.
+	\item[show] Dumps the \texttt{Population} to the terminal.
+	\item[row.names] Returns the names of the rows (they are integers so this isn't too exciting).
+\end{description}
+
+
+
+\section*{Importing Data}
+
+OK, so typing all this stuff in is rather monotonous and will be a total pain if you have a real data set with hundreds or thousands of individuals and a righteous amount of loci.  
+
+The main function for importing data from a text file into a \texttt{Population} object is \texttt{read.population} and assumes the following about your data:
+\begin{enumerate}
+	\item You have your data in a TEXT file that is comma separated (*.csv).  
+	\item You have a header row on your file with the names of each column of data.  Headers should not have spaces in them, R will replace them with a period.
+	\item Genetic marker that have more than one allele are encoded using a colon ":" separating alleles.  This means that the diploid microsatellite locus with alleles 122 \& 128 would be in a single column as 122:128.  This allows you to have triploid, tetraploid, etc markers with not other encoding.
+	\item Haploid markers are do not need a ":", just put in the haplotype.  With haploid data, searching for ":" won't work so you need to pass the number of haploid loci as the optional parameter \texttt{num.haploid} to \texttt{read.population}.  The haploid loci \emph{must} be the last \texttt{num.haploid} right-most columns in your data set.
+	\item All alleles will be treated internally as a \texttt{character} string (except for in a few cases such as estimating ladder-distance).  So you can use all alphanumeric characters for alleles but stay away from punctuation.
+	\item Missing data should be encoded as NA (for the whole genotype NA:NA is just silly).
+	\item If you have a mixture of genetic data types, columns with ":" will be automatically interpreted as \texttt{Locus} objects.  You can mix in haploid data types by putting them in the last, right-most, columns and pass the optional parameter \texttt{num.haploid} with the number columns to put as haploid.
+\end{enumerate}
+
+An example data file may look like:
+
+\begin{verbatim}
+Population,Lat,Lon,PGM,TPI
+Loreto,22.25,-102.01,120:122,A:T
+Loreto,22.25,-102.01,122:124,A:C
+Cabo,22.88,-109.9,120:120,A:A
+Cabo,22.88,-109.9,NA,A:T
+\end{verbatim}
+
+This file can be loaded as (assuming \texttt{getwd()} contains the file)
+
+<<>>=
+pop <- read.population(file="testData.csv")
+summary(pop)
+@
+
+
+In general, if you can open your file using \texttt{read.table}, then \texttt{read.population} should work.
+
+\subsection*{Example Data Sets}
+
+The \texttt{gstudio} package comes with some example data sets already loaded.  To access these data sets, use the \texttt{data} function and they will be put into your workspace (already formatted as \texttt{Population} objects).
+
+<<>>=
+data(araptus_attenuatus)
+summary(araptus_attenuatus)
+@
+
+
+
+
+
+
+
+
+\end{document}

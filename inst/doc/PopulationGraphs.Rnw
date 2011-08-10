@@ -1,0 +1,159 @@
+%
+%  Dyerlab Documentation: untitled
+%
+%  Created by dyer on 2011-07-20.
+\documentclass[letterpaper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[scaled]{helvet}
+\renewcommand*\familydefault{\sfdefault}
+\usepackage{amsmath} % for better align*
+\usepackage{Sweave}
+\usepackage[parfill]{parskip}
+\usepackage{color}
+
+
+\title{Population Graphs}
+\author{Rodney J. Dyer\\\small Department of Biology\\\small Virginia Commonwealth University\\\footnotesize http://dyerlab.bio.vcu.edu}
+\date{}
+
+
+%\VignetteIndexEntry{Genetic Structure}
+
+
+\begin{document}
+\maketitle
+
+\section*{Synopsis}
+
+A population graph is a topological representation of within and among population genetic variance first introduced by Dyer \& Nason (2004).  It is particularly well suited to characterizing how spatial genetic variation is distributed among sites.
+
+<<>>=
+require(gstudio)
+data(araptus_attenuatus)
+baja <- araptus_attenuatus[araptus_attenuatus$Species != "CladeB",]
+@
+
+\section*{Simple Population Graphs}
+
+
+
+<<echo=true,fig=true,include=true>>=
+graph <- population.graph(baja,"Pop")
+summary(graph)
+l <- layout.fruchterman.reingold(graph)
+plot(graph,layout=l,vertex.label=V(graph)$name)
+@
+
+We know that these data are a mixture of two putative species denoted as \texttt{CladeA} and \texttt{CladeC}.  
+
+<<>>=
+table(baja$Species)
+@
+
+We can color the nodes depending upon the identity of clade representation at the node-level.  If there is a mixture of species, you would expect to find that the mixed populations would be topologically intermediate between populations made up of pure samples.
+
+<<echo=true,fig=true,include=true>>=
+getCladeColor <- function(pop,data) {
+	inds <- data$Species[data$Pop==pop]
+	levels.inds <- levels(as.factor(as.character(inds)))
+	if(length(levels.inds)==2) return("red")
+	else if( levels.inds=="CladeA" ) return("blue")
+	else return("green")
+}
+colors <- unlist(lapply(V(graph)$name, function(x) getCladeColor(x,baja)))
+plot(graph,layout=l,vertex.label=V(graph)$name,vertex.color=colors)
+@
+
+
+So if we only use the samples from \texttt{CladeC} we may be actually analyzing the data in a way that makes sense.  Do this by:
+
+\begin{enumerate}
+	\item Use only the \texttt{CladeC} individuals
+	\item Get rid of the populations with say $N<5$ individuals
+	\item Make graph and examine the topology
+\end{enumerate}
+
+
+<<echo=true,fig=true,include=true>>=
+baja.cladeC <- baja[baja$Species=="CladeC",]
+inds.per.pop <- lapply( partition(baja.cladeC,"Pop"), function(x) dim(x)[1] )
+## Examine inds per pop to figure out which have <5 individuals save in smPops
+smPops <- c("Const","ESan","157","73","Aqu","Mat","98","75")
+baja.cladeC <- baja.cladeC[ !(baja.cladeC$Pop %in% smPops) , ]
+graph.cladeC <- population.graph(baja.cladeC,"Pop")
+summary(graph.cladeC)
+l <- layout.fruchterman.reingold(graph.cladeC)
+plot(graph.cladeC,layout=l,vertex.label=V(graph.cladeC)$name)
+@
+
+From this plot, you can see even when we only focus on the true \texttt{CladeC} individuals, there is still partitioning of genetic covariance!  
+
+
+\section*{Node Position}
+
+Both node and edge position in the topology can easily be determined using common network analysis tools.  The \texttt{igraph} package has some as does the most excellent \texttt{sna} package.  Here is a quick example where the size of the node is depicting the node's betweeness (e.g., the number of shortest paths that go through that node).
+
+<<echo=true,fig=true,include=true>>=
+pop.betweenness <- betweenness(graph.cladeC,directed=F)
+plot(graph.cladeC,layout=l,vertex.label=V(graph.cladeC)$name,vertex.size=pop.betweenness)
+@
+
+Which is rather interesting since betweenness can be used to classify relative population importance.  Presently, it is common to use genetic diversity as a surrogate to identify populations of high conservation importance, but betweenness relates to the connectivity of the gene flow topology on the landscape and is not necessarily correlated with genetic diversity.
+
+<<>>=
+cor.test(V(graph.cladeC)$size,pop.betweenness,method="spearman")
+@
+
+
+\section*{Conditional Genetic Distance}
+
+In Dyer \emph{et al.} (2010) we showed that graph distance (e.g., the shortest path connecting points in the topology) was more powerful than pair-wise structure and distance approaches.  We denoted the among population distance as $cGD$ for conditional graph distance.
+
+Since this topology is disconnected, we'll just focus on the medium sized component, the one with \texttt{84} in it.
+
+<<echo=true,fig=true,include=true>>=
+connected.to.84 <- subcomponent(graph.cladeC,v="84")
+med.graph <- subgraph(graph.cladeC,v=connected.to.84)
+med.layout <- layout.fruchterman.reingold(med.graph)
+plot(med.graph,layout=med.layout,vertex.label=V(med.graph)$name)
+D <- shortest.paths(med.graph)
+@
+
+As discussed previously, we can also get the pair-wise physical distance and then examine "Isolation by Graph Distance" (IBGD), which has some nice properties that make it perhaps more precise than IBD based upon pair-wise structure estimates.
+
+<<echo=true,fig=true,include=true>>=
+pops <- V(med.graph)$name
+coords <- lapply( pops, function(pop){ 
+		c( mean( baja$Long[baja$Pop==pop]), mean(baja$Lat[baja$Pop==pop]))})
+coords <-matrix(unlist(coords),ncol=2,byrow=T)
+coords
+require(fields,quietly=T)
+P <- rdist(coords)
+plot(D[lower.tri(D)] ~ P[lower.tri(P)], bty="n",xlab="Physical Distance",ylab="Graph Distance")
+@
+
+
+We can use a Mantel test to see if there is a correlation between graph and physical distance for this subcomponent.
+
+<<>>=
+require(ecodist,quietly=T)
+mantel(as.dist(D)~as.dist(P)) ##pval3 is Ho: Mantel-R=0
+@
+
+The \texttt{pval3} is the probability of $H_O: Mantel\rho=0 $.  
+
+
+\section*{Graph Partitions}
+
+A very important point needs to be made here regarding subgraphs and partitions of the whole data set.  The disconnected subgraph in the previous section is not necessarily the same graph you would get if you partitioned the genotypes into only those populations and then make the graph.  Compare the previous network topology to this one.
+
+<<echo=true,fig=true,include=true>>=
+tmp.pop <- baja[baja$Pop %in% c("9","84","88","89","159","171","173","175","177")]
+tmp.graph <- population.graph(tmp.pop,"Pop")
+plot(tmp.graph,layout=med.layout,vertex.label=V(tmp.graph)$name)
+@
+
+This is because Population Graphs are constructed using \emph{Conditional Genetic Covariance}.  The genetic covariance between populations \texttt{173} \& \texttt{171} is conditional on the their covariance with all the other data in the data set.  In the first graph this includes the populations in this subgraph as well as the populations outside the subgraph.  
+
+\end{document}
