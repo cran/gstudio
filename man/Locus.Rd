@@ -2,11 +2,16 @@
 \alias{Locus}
 \title{Constructor function for \code{\linkS4class{Locus}} objects}
 \usage{
-  Locus(alleles = character(0))
+  Locus(alleles = character(0), phased = FALSE)
 }
 \arguments{
   \item{alleles}{A vector of objects that can be turned
   into \code{character}}
+
+  \item{phased}{A logical flag indicating that the order of
+  the alleles is important (default FALSE) such that loc1
+  != loc2 for loc1=1:2 and loc2=2:1 By default, the alleles
+  are sorted ascending.+}
 }
 \value{
   A fully formed \code{\linkS4class{Locus}} object.

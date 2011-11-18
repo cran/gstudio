@@ -169,6 +169,8 @@ The main function for importing data from a text file into a \texttt{Population}
 	\item If you have a mixture of genetic data types, columns with ":" will be automatically interpreted as \texttt{Locus} objects.  You can mix in haploid data types by putting them in the last, right-most, columns and pass the optional parameter \texttt{num.haploid} with the number columns to put as haploid.
 \end{enumerate}
 
+\subsection*{Reading From a Text File}
+
 An example data file may look like:
 
 \begin{verbatim}
@@ -186,8 +188,64 @@ pop <- read.population(file="testData.csv")
 summary(pop)
 @
 
-
 In general, if you can open your file using \texttt{read.table}, then \texttt{read.population} should work.
+
+
+
+\subsection*{Using Google Spreadsheets To Share Data}
+
+One of the really great things about google docs is that you can use it to share information and documents with others and here we will be examining how to use it to keep public data available for analysis in R.
+
+
+The first step is to provide a bit of data to share.  The following example uses the shared \emph{Cornus florida} data set.  This consists of adults and offspring.
+
+To share a document, click the "Share" button and you will be presented with a popup window giving you options on what to do similar to Figure \ref{fig:SharingSettings}.
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.5\textwidth]{SharingSettings}
+	\label{fig:SharingSettings}
+	\caption{Settings to adjust sharing options for google document.}
+\end{figure}
+
+Where it says Private select the "Change..." option and change the Visibility Options to "Anyone with the link" and hit save.  It will then return to the Sharing Settings (Figure \ref{fig:SharingSettings}) page and provide you a unique link to the document.  
+
+This gives individuals access to the spreadsheet as a whole, but what we would like to do is to get to the contents of it as a *.csv file.  In the spreadsheet, select \texttt{File} $\to$ \texttt{Publish to the Web} and select the following options in the dialog:
+\begin{enumerate}
+	\item Sheets to Publish $\to$ \texttt{All sheets}
+	\item Check the box \texttt{Automatically republish when changes are made}
+	\item Select \texttt{Start publishing}.
+\end{enumerate}
+
+This will make the bottom part of the dialog active and you'll need to make the following changes:
+
+\begin{enumerate}
+	\item Change type from \texttt{Web} $\to$ \texttt{CSV}
+	\item Change \texttt{All Sheets} $\to$ \texttt{Sheet1}
+	\item Change \texttt{All Cells} $\to$ the range that you want to share.  Here you need to use Excel-like notation such as \texttt{A1:I63} for the box from column A, first row to column I, 63nd row.
+\end{enumerate}
+
+The dialog provides a URL for these data, the one above is:
+
+\begin{verbatim}
+https://docs.google.com/spreadsheet/pub?hl=en_US&hl=en_US&key=0Aq-lsUWPDuZtdF9xMXZGQWNtbk1F
+NTVWd3F3U0FDdXc&single=true&gid=0&range=A1%3AG63&output=csv
+\end{verbatim}
+
+
+\section{Getting Data Into \texttt{R} from GoogleDocs}
+
+Now we have a data set that is available on the web and we can get to it from within R using the the \texttt{getURL}, \texttt{read.csv}, and \texttt{textConnection} functions as follows (n.b. I truncated the URL as it goes off the end of the page, it is the one from above.)
+
+<<eval=false,echo=true>>=
+spreadsheetURL <- "https://docs.google.com/spreadsheet/pub?hl=en_US&hl=en_US&key=0Aq-..."
+dogwood <- read.population( googleURL=dogwoodURL )
+@
+
+
+
+And there you go, you have now used your Google Account to host data that is available to everyone...  No go forth and share.
+
 
 \subsection*{Example Data Sets}
 

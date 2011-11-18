@@ -3,7 +3,8 @@
 \title{Calucluate pair-wise distance between stratum}
 \usage{
   stratum.distance(pop, stratum, lat = "Latitude", lon =
-  "Longitude", subset)
+  "Longitude", mode = c("Great Circle", "Euclidean")[1],
+  subset)
 }
 \arguments{
   \item{pop}{A \code{Population} object}
@@ -14,6 +15,10 @@
   \item{lat}{The label for latitude (default 'Latitude')}
 
   \item{lon}{The label for longitude (default 'Longitude')}
+
+  \item{mode}{Option for distance estimation.  "Great
+  Circle" (default) takes into consideration the curvature
+  of the earth, "Eucklidean" takes straigh-line distance.}
 
   \item{subset}{A list of stratum to use (default is
   missing and all)}

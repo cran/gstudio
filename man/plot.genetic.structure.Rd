@@ -2,7 +2,7 @@
 \alias{plot.genetic.structure}
 \title{Plots out results of genetic structure}
 \usage{
-  plot.genetic.structure(x, y, ...)
+  \method{plot}{genetic.structure} (x, y, ...)
 }
 \arguments{
   \item{x}{A \code{genetic.structure} object}

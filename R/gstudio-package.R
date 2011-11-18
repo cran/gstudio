@@ -1,9 +1,20 @@
 #' An example data set for co-dominant loci
 #'
-#' This data set was published in Garrick et al. (2011) and consists of four
+#' This data set was published in Garrick et al. (2012) and consists of four
 #'	strata, two coordinates, and eight co-dominant loci.
 #'
 #' @name araptus_attenuatus
+#' @docType data
+#' @author Rodney J. Dyer <rjdyer@@vcu.edu>
+#' @keywords data
+NULL
+
+#' An example data set for parent offspring data
+#'
+#' This data set was published in Dyer et al. (2012) and consists of 22 adult
+#'	and 41 offspring from two mothers.  Genotypes are assayed for 
+#'
+#' @name cornus_florida
 #' @docType data
 #' @author Rodney J. Dyer <rjdyer@@vcu.edu>
 #' @keywords data
@@ -35,3 +46,4 @@ NULL
 #' @rdname gstudio-package
 #'
 NULL
+

@@ -2,11 +2,15 @@
 \alias{read.population}
 \title{Loads a population from a *.csv file}
 \usage{
-  read.population(file, num.haploid = 0, header = TRUE, sep
-  = ",", split = NULL)
+  read.population(file = NULL, googleURL = NULL,
+  num.haploid = 0, header = TRUE, sep = ",", split = NULL)
 }
 \arguments{
-  \item{file}{The path to the data file}
+  \item{file}{The path to the data file, this can be
+  optional if you are loading a file from a google
+  spreadsheet (see \code{googleURL} below).}
+
+  \item{googleURL}{The URL to the shared spreadsheet}
 
   \item{num.haploid}{The number of that are haploid (or
   binary).  These will be loaded as the right most

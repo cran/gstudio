@@ -173,6 +173,15 @@ Dest.baja <- genetic.structure(baja,stratum="Pop","EN",mode="Dest",num.perm=999)
 print(Dest.baja)
 @
 
+\section*{Pairwise Structure}
+
+The \texttt{genetic.structure} function can also be used to estimate pairwise estimates of each parameter using the optional \texttt{pairwise} flag.  
+
+<<>>=
+sonora <- araptus_attenuatus[araptus_attenuatus$Species=="CladeB",]
+genetic.structure(sonora,"Pop",loci="EN",mode="Gst.prime", pairwise=TRUE)
+@
+
 
 
 

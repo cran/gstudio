@@ -2,7 +2,7 @@
 \alias{plot.genetic.diversity}
 \title{Plots out results of genetic diversity}
 \usage{
-  plot.genetic.diversity(x, y, ...)
+  \method{plot}{genetic.diversity} (x, y, ...)
 }
 \arguments{
   \item{x}{A \code{genetic.diversity} object}

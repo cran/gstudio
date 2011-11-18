@@ -36,3 +36,12 @@ test.diploid.locus <- function() {
 	loc3[2] <- "T"
 	checkEquals( as.character(loc3), "A:T" )
 }
+
+test.ops.locus <- function() { 
+	loc1 <- Locus( 1:2 )
+	loc2 <- Locus( 1:2 )
+	loc3 <- Locus( c("A","A") )
+
+	checkTrue( loc1==loc2 )
+	checkTrue( loc1!=loc3 )
+}

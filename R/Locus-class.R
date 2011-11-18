@@ -50,6 +50,9 @@ setClass("Locus",
 #' This function will not sort the alleles but will keep them in normal order
 #' 
 #' @param alleles A vector of objects that can be turned into \code{character}
+#' @param phased A logical flag indicating that the order of the alleles is 
+#'	important (default FALSE) such that loc1 != loc2 for loc1=1:2 and loc2=2:1
+#'	By default, the alleles are sorted ascending.+
 #' @return A fully formed \code{\linkS4class{Locus}} object.
 #' @note Missing data can be encoded as either '-9' or 'NA'.  If there is a 
 #'	single missing allele at the locus, then the entire locus will be 
@@ -66,7 +69,7 @@ setClass("Locus",
 #' loc <- Locus( c("A","T"))
 #'
 
-Locus <- function( alleles=character(0) ) {
+Locus <- function( alleles=character(0), phased=FALSE ) {
 	if( missing(alleles)) alleles <- character(0)
 	else if( !length(alleles)) alleles <- character(0)
 	else if( "-9" %in% alleles ) 
@@ -74,6 +77,8 @@ Locus <- function( alleles=character(0) ) {
 	else if( "NA" %in% alleles ) alleles <- character(0)
 	else if( "na" %in% alleles ) alleles <- character(0)
 	if( class(alleles) != "character") alleles <- as.character(alleles) 
+	if( !phased )
+		alleles <- sort(alleles)
 	new("Locus",alleles=alleles )
 }
 
@@ -193,6 +198,56 @@ setReplaceMethod("[",
 		x@alleles[i] <- as.character(value)
 		x
     }
+)
+
+
+setMethod("Compare", signature(e1="Locus", e2="Locus"),
+	function(e1,e2){
+		if( .Generic[[1]] == "==")
+			return(all(callGeneric(e1@alleles,e2@alleles)))
+		else if( .Generic[[1]] == "!=" )
+			return(any(callGeneric(e1@alleles,e2@alleles)))
+		else
+			stop(paste("Operator '",.Generic[[1]],"' not supported for Locus objects"))
+	}
+)
+
+
+
+setMethod("Arith", signature(e1="Locus",e2="Locus"),
+	function( e1, e2 ){
+		if( .Generic[[1]] == "+" ) { # make offspring  
+			if( length(e1) < 2 | length(e2) < 2)
+				stop("The addition operator is not supporte for missing/haploid data.")
+			return( Locus( c( sample( e1@alleles, length(e1)/2), sample( e2@alleles, length(e2)/2) ) ) ) 
+		}
+		else if( .Generic[[1]] == "-" ) { # off - mom 
+			
+			if( length(e1) != 2 | length(e2) !=2)
+				stop("The subtraction operator is not supporte for non-diploid loci.")
+			
+			if( e1 == e2 ) { # same genotypes
+				if( is.heterozygote(e1) ) # heterozygote
+					return( e2 )
+				else # homozygote
+					return( Locus( e1@alleles[1] ) )
+			}
+			else { # different genotyeps
+				if( e2@alleles[1] == e1@alleles[1] || 
+					e2@alleles[2] == e1@alleles[1] ) # share off first
+					return( Locus( e1@alleles[2] ) )
+				else if( e2@alleles[1] == e1@alleles[2] ||
+						 e2@alleles[2] == e1@alleles[2] ) # share off second
+					return( Locus( e1@alleles[1] ) )
+				else { # return offspring, cannot remove maternal part.
+					warning(paste("Could not remove maternal component from locus (mom=", as.character(e2),", off=", as.character(e1), ")", sep=""))
+					return(e1)
+				}
+			}
+		}
+		else
+			stop(paste("Operator '",.Generic[[1]],"' not supported for Locus objects"))
+	}
 )
 
 

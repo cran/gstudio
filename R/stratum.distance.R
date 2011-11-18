@@ -7,16 +7,22 @@
 #' @param stratum The stratum to use for estimating distances
 #' @param lat The label for latitude (default 'Latitude')
 #' @param lon The label for longitude (default 'Longitude')
+#' @param mode Option for distance estimation.  "Great Circle" (default)
+#'	takes into consideration the curvature of the earth, "Eucklidean"
+#'	takes straigh-line distance.
 #' @param subset A list of stratum to use (default is missing and all)
 #' @return A matrix of pair-wise distances (in km)
 #' @seealso \code{\link{great.circle.distance}}
 #' @author Rodney J. Dyer <rjdyer@@vcu.edu>
 #' @export
 #'
-stratum.distance <- function(pop,stratum,lat="Latitude",lon="Longitude",subset) {
+stratum.distance <- function(	pop,
+								stratum, 
+								lat="Latitude", lon="Longitude",
+								mode=c("Great Circle","Euclidean")[1], 
+								subset ) {
 	if( missing(pop) || missing(stratum) )
 		stop("Both pop and stratum are required for stratum.distance")
-	
 	
 	strata <- partition(pop,stratum)		
 	if(!missing(subset) ){
@@ -40,7 +46,10 @@ stratum.distance <- function(pop,stratum,lat="Latitude",lon="Longitude",subset) 
 			if(j<=K){
 				lat2 <- mean(pop[pop[[stratum]]==popnames[j]][[lat]])
 				lon2 <- mean(pop[pop[[stratum]]==popnames[j]][[lon]])
-				d <- great.circle.distance(lon1,lat1,lon2,lat2)
+				if( mode=="Great Circle")
+					d <- great.circle.distance(lon1,lat1,lon2,lat2)
+				else
+					d <- sqrt( (lat1-lat2)^2 + (lon1-lon2)^2 )
 				D[i,j] <- D[j,i] <- d
 			}
 		}

@@ -16,6 +16,7 @@
 #' @param ... Ignored for the most part.
 #' @rdname print_summary.gstudio
 #' @author Rodney J. Dyer <rjdyer@@vcu.edu>
+#' @method print summary.gstudio
 #' @export
 print.summary.gstudio <- function(x,...){
 	for(name in names(x))

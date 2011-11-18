@@ -1,4 +1,4 @@
-2011-08-12 Rodney J. Dyer <rjdyer@vcu.edu> version = 0.01
+2011-08-12 Rodney J. Dyer <rjdyer@vcu.edu> version = 0.1
 - [NEW] S4 class for Locus
 - [NEW] S4 class for Population
 - [NEW] S4 class forAlleleFrequencies
@@ -7,24 +7,49 @@
 - [NEW] read.population()
 - [NEW] population.graph()
 
-2011-08-26 Rodney J. Dyer <rjdyer@vcu.edu> version = 0.02
+2011-08-26 Rodney J. Dyer <rjdyer@vcu.edu> version = 0.2
 - [FIX] Vignette names (popgraph was coming out as genetic structure) and new vignettes for the offspring analysis
 - [ADD] option 'verbose' for genetic.structure to toggle printing of progress for longer jobs.
-- [NEW] great.circle.distance() and stratum.distance() functions added to calculate physical separation amongst
-	sites.
+- [NEW] great.circle.distance() and stratum.distance() functions added to calculate physical separation amongst sites.
 - [NEW] google.pie.chart() function to make pie icons for population plotting
 - [NEW] pies.on.map() function to create KML file for examining allele frequencies of strata
-- [CHANGE] population.graph() added routines to incorporate latitude, longitude, and grouping 
-	into the graph representation for spatial plotting.
+- [CHANGE] population.graph() added routines to incorporate latitude, longitude, and grouping into the graph representation for spatial plotting.
 - [NEW] popgraph.on.map() function to create KML file for population graphs
 - [NEW] genetic.diversity() function to estimate diversity statistics using rarefaction.
 - [NEW] Vignette on genetic.diversity
 - [NEW] Vignette on mapping 'GStudio Mapping'
 - [NEW] stratum.distance() function to get physical distances between populations.
 
+2011-11-25 Rodney J. Dyer <rjdyer@vcu.edu> version = 0.3
+- [NEW] congruence.graph() function to create congruence topologies
+- [NEW] congruence.graph.probability() determine the probability of the congruence graph given the size of the parental graphs
+- [NEW] read.pgraph() to read in population graph files.
+- [ADD] ability to load data from shared GoogleDocs Spreadsheet into read.population and updated vignette.
+- [ADD] cornus_florida genotype dataset with parents and offspring
+- [ADD] Vignette on Parent Offspring Data
+- [ADD] column.class method added to Population to return indices of particular classes of variables in a population.
+- [NEW] offspring.array() function added to parse out families of mom/offspring from large data set.
+- [ADD] Comparison operators "==" and "!=" for Locus objects.
+- [ADD] Arith operators "+" and "-" added for Locus objects for mating & pulling mother part (respectively).
+- [NEW] minus.mom() added to pull maternal contributions to offspring arrays.
+- [NEW] exclusion.probability()
+- [ADD] "euclidean" distance option for stratum.distance()
+- [NEW] paternity(pop, familyID) added, performs family-wise paternity and returns fractional assignment
+- [ADD] option of pairwise to genetic.structure() function that returns a simple matrix of pairwise structure values
+- [NEW] paternity.spiderplot(pop,paternity) Makes graphical output of paternity
+- [FIX] fixed cGD estimation in genetic.distance function.
+
 UPCOMING:
+- [ADD] spatial autocorrelation using Smouse & Peakall (1999)
+- [NEW] save.population() to text, STRUCTURE, and XXXX
+- [NEW] added human data set to example data 
+- [ADD] added congruence examples to PopulationGraph vignette.
 - [ADD] Congruence of topologies for population graphs
-- [ADD] as.html option for mapping functions to create googlemap javascript maps instead of kml files.
 - [ADD] Example of amova in genetic.structure
 - [ADD] Fst (coalescent time) added to genetic.structure
 - [ADD] add drop.one option to multivariate.loci option
+- [ADD] stamova
+
+
+
+

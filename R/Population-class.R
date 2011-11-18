@@ -122,6 +122,38 @@ setMethod("names",
 	}
 )
 
+
+
+#' Set names of data columns in the \code{Population}
+#'
+#' This overloads the names()<- function to reset the names of
+#'	the data columns in the \code{Population}
+#'
+#' @param x A \code{Population} object
+#' @param value The new names
+#' @return Nothing
+#' @aliases names<-,Population-method
+#' @rdname Population-accessors
+#' @author Rodney J. Dyer <rjdyer@@vcu.edu>
+#' @examples
+#' 
+#' loci <- c( Locus(c(1,2)),Locus(c(2,2)),Locus(c(1,1)) )
+#' strata <- c("Cabo","Cabo","Loreto")
+#' cov <- rnorm(3)
+#' pop <- Population( Pop=strata, env=cov, TPI=loci )
+#' nm <- names(pop)
+#' nm[2] <- "Environment"
+#' names(pop) <- nm
+#' names(pop)
+#'
+setMethod("names<-",
+	signature("Population"),
+	function( x, value ) {
+		names(x@values) <- value
+	}
+)
+
+
 #' Dimensions of the \code{Population}
 #' 
 #' A length two vector of row and column sizes of the \code{Population}
@@ -630,8 +662,30 @@ setMethod("[[",
 	
 		
 	
-
-
+#' Append individuals onto population
+#'
+#' This is an overload function of append that will add individuals onto the
+#'	end of the population.
+#'
+#' @param x A \code{Population} 
+#' @param values Another \code{Population}
+#' @return A \code{Population} with all data from both x and values
+#' @note The two populations must have the same data columns, and in the same order.
+#' @author Rodney J. Dyer <rjdyer@@vcu.edu>
+#' @docType methods
+#' @rdname Population-accessors
+#'
+setMethod("append",
+	signature("Population","Population"),
+	function(x,values,after=length(x[,1])){
+		if( !all( names(x) == names(values)) )
+			stop("Populations must have the same columns to append at this point.")
+		
+		for(name in names(x))
+			x@values[[name]] <- c( x@values[[name]],values@values[[name]])
+		return(x)
+	}
+)
 
 
 
@@ -825,7 +879,49 @@ setMethod("indices",
 )
 
 
+#' Returns the indices of the data columns that are of type
+#'	requested
+#'
+#' This is a quick helper function that returns the column
+#'	indices for particular data types.
+#' @param pop A \code{Population} object
+#' @param type A character string as expected to be returned
+#'	from the \code{class} function.
+#' @return vector of column indices
+#' @docType methods
+#' @aliases column.class
+#' @rdname column.class_Population
+#' @author Rodney J. Dyer <rjdyer@@vcu.edu>
 
+setGeneric("column.class",
+	def=function(pop,type) standardGeneric("column.class") )
+	
+#' @rdname column.class_Population
+#' @aliases column.class,Population-method
+#' @exportMethod column.class
+#' @examples \dontrun{
+#'
+#' loci <- c( Locus(c(1,2)),Locus(c(2,2)),Locus(c(2,2)) )
+#' strata <- c("Cabo","Cabo","Loreto")
+#' cov1 <- rnorm(3)
+#' cov2 <- rnorm(3)
+#' pop <- Population( Pop=strata, env1=cov1, TPI=loci, env2=cov2 )
+#' column.class( pop, "Locus" )
+#'
+#' }
+
+setMethod("column.class",
+	"Population",
+	function(pop,type){
+		if( dim(pop)[1] < 1 )
+			stop("population needs indidivudals...")
+		h <- names(pop)
+		r <- rep(NA,length(h))
+		for(i in 1:length(h))
+			r[i] <- class( pop[1,i] )
+		return( which( r==type) )
+	}
+)
 
 
 

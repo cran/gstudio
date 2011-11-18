@@ -3,7 +3,7 @@
 \alias{araptus_attenuatus}
 \title{An example data set for co-dominant loci}
 \description{
-  This data set was published in Garrick et al. (2011) and
+  This data set was published in Garrick et al. (2012) and
   consists of four strata, two coordinates, and eight
   co-dominant loci.
 }

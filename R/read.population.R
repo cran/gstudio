@@ -9,7 +9,9 @@
 #'
 #' General function to load a population from a file.
 #'
-#' @param file The path to the data file
+#' @param file The path to the data file, this can be optional if you are 
+#'	loading a file from a google spreadsheet (see \code{googleURL} below).
+#' @param googleURL The URL to the shared spreadsheet 
 #' @param num.haploid The number of that are haploid (or binary).  These will 
 #'	be loaded as the right most \code{num.haploid} number of columns.
 #' @param header A logical value indicating that the first line is column 
@@ -31,12 +33,35 @@
 #'	have a colon in them...
 #' @author Rodney J. Dyer <rjdyer@@vcu.edu>
 #' @export
-read.population <- function( 	file, 
+read.population <- function( 	file=NULL, 
+								googleURL=NULL,
 								num.haploid=0, 
 								header=TRUE, 
 								sep=",",
 								split=NULL) {
-	df <- read.table(file=file,header=header,sep=sep)
+	if( !is.null(googleURL) ){
+		require(RCurl)
+		raw <- getURLContent( googleURL )
+		if( "Content-Type" %in% names(attributes(raw))){
+			if( "text/plain" == attr(raw,"Content-Type")[1] & length(raw) ) {
+				con <- textConnection(raw[1])
+				df <- read.table(con,sep=sep,header=header)
+				close(con)
+			}
+		}
+		else {
+			stop("Malformed googleURL")
+		}
+		connection <- getURL(googleURL)
+		
+	}
+	else if( !is.null(file)){
+		df <- read.table(file=file,header=header,sep=sep)
+	}
+	else {
+		
+	}
+	
 	thePop <- Population()
 	nCols <- dim(df)[2]
 	labels <- names(df)

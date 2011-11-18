@@ -2,7 +2,7 @@
 \alias{print.genetic.diversity}
 \title{Prints out results of genetic diversity}
 \usage{
-  print.genetic.diversity(x, ...)
+  \method{print}{genetic.diversity} (x, ...)
 }
 \arguments{
   \item{x}{A \code{genetic.diversity} object}

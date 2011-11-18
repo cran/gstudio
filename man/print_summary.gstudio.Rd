@@ -2,7 +2,7 @@
 \alias{print.summary.gstudio}
 \title{Printing of a summary.Locus object}
 \usage{
-  print.summary.gstudio(x, ...)
+  \method{print}{summary.gstudio} (x, ...)
 }
 \arguments{
   \item{x}{A \code{summary.gstudio} object}

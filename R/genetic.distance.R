@@ -341,9 +341,10 @@ genetic.distance <- function( 	pop=NULL,
 #' @author Rodney J. Dyer <rjdyer@@vcu.edu>
 #'
 .dist.cgd <- function( pop, stratum, loci) {
-	pops <- partition(pop,stratum)
-	K <- length(pops)
-	ret <- matrix(0,nrow=K,ncol=K)
-	
+	graph <- population.graph(pop,stratum)
+	cols <- indices(pop,loci)
+	locus <- paste(names(pop)[cols],collapse=".")
+	ret <- list()
+	ret[[locus]] <- shortest.paths(graph)
 	return(ret)
 }

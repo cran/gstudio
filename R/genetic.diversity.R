@@ -117,6 +117,7 @@ genetic.diversity <- function(	pop,
 #' @param x A \code{genetic.diversity} object
 #' @param ... Ignored
 #' @author Rodney J. Dyer <rjdyer@@vcu.edu>
+#' @method print genetic.diversity
 #' @export
 #'
 print.genetic.diversity <- function(x,...) {
@@ -158,6 +159,7 @@ print.genetic.diversity <- function(x,...) {
 #'	be examined and you will be prompted to cycle through them.
 #' @param ... Ignored
 #' @author Rodney J. Dyer <rjdyer@@vcu.edu>
+#' @method plot genetic.diversity
 #' @export
 #'
 plot.genetic.diversity <- function(x,y,...){

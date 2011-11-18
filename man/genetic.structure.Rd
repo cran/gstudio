@@ -4,12 +4,12 @@
 \usage{
   genetic.structure(pop = NULL, stratum = NULL, loci =
   NULL, mode = c("Gst", "Gst.prime", "Dest"), num.perm = 0,
-  verbose = FALSE)
+  verbose = FALSE, pairwise = FALSE)
 }
 \arguments{
   \item{pop}{A \code{\linkS4class{Population}} object}
 
-  \item{stratum}{The on which individuals will be
+  \item{stratum}{The column on which individuals will be
   partitioned}
 
   \item{loci}{The locus or loci that the parameters will be
@@ -25,6 +25,11 @@
 
   \item{verbose}{A logical flag to indicate the locus
   progress (default=FALSE)}
+
+  \item{pairwise}{A logical flag to indicate that the
+  analysis should be done in a pairwise fasion and return
+  the results as a matrix instead of as a genetic.structure
+  object.}
 }
 \value{
   A \code{genetic.structure} object that has overloaded

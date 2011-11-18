@@ -8,7 +8,7 @@
 #' Main function for estimating genetic structure parameters
 #'
 #' @param pop A \code{\linkS4class{Population}} object
-#' @param stratum The on which individuals will be partitioned
+#' @param stratum The column on which individuals will be partitioned
 #' @param loci The locus or loci that the parameters will be estimated (see 
 #'	note below).  If this option is not given, all loci will be used.
 #' @param mode The parameter that is to be estimated.  Current options include
@@ -16,6 +16,9 @@
 #' @param num.perm The number of permutations to used for significance testing.
 #'	All significance is tested using permutation of individuals.
 #' @param verbose A logical flag to indicate the locus progress (default=FALSE)
+#' @param pairwise A logical flag to indicate that the analysis should be done
+#'	in a pairwise fasion and return the results as a matrix instead of as a 
+#'	genetic.structure object.
 #' @return A \code{genetic.structure} object that has overloaded
 #'	\code{print}, \code{summary}, and \code{plot} functions.
 #' @seealso \code{\link{print.genetic.structure}}, 
@@ -35,7 +38,8 @@ genetic.structure <- function( 	pop=NULL,
 								loci=NULL,
 								mode=c("Gst","Gst.prime","Dest"),
 								num.perm=0,
-								verbose=FALSE
+								verbose=FALSE,
+								pairwise=FALSE
 								)
 {
 	if( is.null(pop) || is.null(stratum) )
@@ -46,6 +50,28 @@ genetic.structure <- function( 	pop=NULL,
 		stop("You need to actually have some loci to estimate genetic structure.")
 	if( !(mode %in% c("Gst","Gst.prime","Dest") ) || length(mode) > 1 )
 		stop("Incorrect 'mode' option to genetic.structure.")
+		
+	# capture analysis if it is pairwise and fill out the matrix here
+	if( pairwise ){
+		strata <- unique(pop[[stratum]])
+		K <- length(strata)
+		D <- matrix(0,nrow=K,ncol=K)
+		row.names(D) <- colnames(D) <-strata
+		for(i in 1:K){
+			for(j in (i+1):K){
+				if( j<=K & i!=j ){
+					#make subpop
+					npop <- pop[ pop[[stratum]]==strata[i] | pop[[stratum]]==strata[j], ]
+					r <- genetic.structure(npop,stratum,loci,mode,0,FALSE,FALSE)
+					if( length(loci) > 1 )
+						D[i,j] <- D[j,i] <- r$mv.estiamte
+					else
+						D[i,j] <- D[j,i] <- r$estimate[[1]]
+				}
+			}
+		}
+		return(D)
+	}
 
 	#set up the return list
 	ret <- list()
@@ -135,7 +161,8 @@ genetic.structure <- function( 	pop=NULL,
 			
 			
 			
-				if( verbose ) cat("; P =",(1+sum(ret$null.distribution[[locus]]>=ret$estimate[[locus]]))/(1+num.perm))
+				if( verbose ) 
+					cat("; P =",(1+sum(ret$null.distribution[[locus]]>=ret$estimate[[locus]]))/(1+num.perm))
 			}
 		}
 		if( verbose ) cat("\n")
@@ -147,7 +174,7 @@ genetic.structure <- function( 	pop=NULL,
 		else 
 			ret$mv.estimate <- mean(unlist(ret$estimate))
 	}
-	
+		
 	class(ret) <- "genetic.structure"
 	return(ret)
 }
@@ -160,6 +187,7 @@ genetic.structure <- function( 	pop=NULL,
 #' @param x A \code{genetic.structure} object
 #' @param ... Ignored
 #' @author Rodney J. Dyer <rjdyer@@vcu.edu>
+#' @method print genetic.structure
 #' @export
 #'
 print.genetic.structure <- function(x,...) {
@@ -192,6 +220,7 @@ print.genetic.structure <- function(x,...) {
 #' @param y Ignored
 #' @param ... Ignored
 #' @author Rodney J. Dyer <rjdyer@@vcu.edu>
+#' @method plot genetic.structure 
 #' @export
 #'
 plot.genetic.structure <- function(x,y,...){

@@ -2,7 +2,7 @@
 \alias{print.genetic.structure}
 \title{Prints out results of genetic structure}
 \usage{
-  print.genetic.structure(x, ...)
+  \method{print}{genetic.structure} (x, ...)
 }
 \arguments{
   \item{x}{A \code{genetic.structure} object}
