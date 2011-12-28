@@ -2,8 +2,8 @@
 \alias{offspring.array}
 \title{Grabs mothers and offspring from a larger data set}
 \usage{
-  offspring.array(pop, momID, idCol = "IndID", offCol =
-  "OffID")
+  offspring.array(pop, momID, idCol = "IndID",
+    offCol = "OffID")
 }
 \arguments{
   \item{pop}{A \code{Population} of individuals that

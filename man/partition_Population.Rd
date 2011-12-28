@@ -1,7 +1,7 @@
 \docType{methods}
 \name{partition}
-\alias{partition,Population-method}
 \alias{partition}
+\alias{partition,Population-method}
 \title{Returns a list of \code{Population} objects}
 \arguments{
   \item{pop}{A \code{Population} object}

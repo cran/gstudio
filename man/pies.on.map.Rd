@@ -3,8 +3,8 @@
 \title{Creates google map with pie charts for allele frequencies.}
 \usage{
   pies.on.map(filename = "pies_on_map.kml", pop = NULL,
-  stratum = NULL, loci = NULL, lat = "Latitude", lon =
-  "Longitude")
+    stratum = NULL, loci = NULL, lat = "Latitude",
+    lon = "Longitude")
 }
 \arguments{
   \item{filename}{The name of the file to use

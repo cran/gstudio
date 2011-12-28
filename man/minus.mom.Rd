@@ -2,16 +2,16 @@
 \alias{minus.mom}
 \title{Removes the materinal contribution to offspring}
 \usage{
-  minus.mom(pop, indID = "IndID", offID = "OffID")
+  minus.mom(pop, indCol = "IndID", offCol = "OffID")
 }
 \arguments{
   \item{pop}{A population from which the maternal component
   will be removed.}
 
-  \item{indID}{The column heading for the Individual ID
-  number (Default="IndID")}
+  \item{indCol}{dataThe column heading for the Individual
+  ID number (Default="IndID")}
 
-  \item{offID}{The column heading for the Offspring ID
+  \item{offCol}{The column heading for the Offspring ID
   number (Default="OffID")}
 }
 \value{

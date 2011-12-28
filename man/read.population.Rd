@@ -3,7 +3,8 @@
 \title{Loads a population from a *.csv file}
 \usage{
   read.population(file = NULL, googleURL = NULL,
-  num.haploid = 0, header = TRUE, sep = ",", split = NULL)
+    num.haploid = 0, header = TRUE, sep = ",",
+    split = NULL)
 }
 \arguments{
   \item{file}{The path to the data file, this can be

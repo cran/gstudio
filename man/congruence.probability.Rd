@@ -2,8 +2,8 @@
 \alias{congruence.probability}
 \title{Probability for congruence graph}
 \usage{
-  congruence.probability(graphA, graphB, congGraph, as.cdf
-  = FALSE)
+  congruence.probability(graphA, graphB, congGraph,
+    as.cdf = FALSE)
 }
 \arguments{
   \item{graphA}{First population graph}

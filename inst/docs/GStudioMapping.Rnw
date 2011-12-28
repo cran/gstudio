@@ -29,7 +29,8 @@ Here the \emph{Araptus attenuatus} data set will be used and in particular the s
 <<>>=
 require(gstudio)
 data(araptus_attenuatus)
-baja <- araptus_attenuatus[araptus_attenuatus$Pop %in% c("88","9","84","177","175","173","171","89","159")]
+popsToKeep <- c("88","9","84","177","175","173","171","89","159")
+baja <- araptus_attenuatus[araptus_attenuatus$Pop %in% popsToKeep]
 @
 
 

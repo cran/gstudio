@@ -1,7 +1,7 @@
 \docType{methods}
 \name{is.heterozygote}
-\alias{is.heterozygote,Locus-method}
 \alias{is.heterozygote}
+\alias{is.heterozygote,Locus-method}
 \title{Is a locus a heterozygote}
 \arguments{
   \item{locus}{A \code{Locus} object}

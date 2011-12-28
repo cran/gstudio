@@ -1,7 +1,7 @@
 \docType{methods}
 \name{multivariate.loci}
-\alias{multivariate.loci,Population-method}
 \alias{multivariate.loci}
+\alias{multivariate.loci,Population-method}
 \title{Returns multivariate genotypes for all loci}
 \arguments{
   \item{pop}{A \code{Population} object}

@@ -1,7 +1,7 @@
 \docType{methods}
 \name{is.na}
-\alias{is.na,Locus-method}
 \alias{is.na}
+\alias{is.na,Locus-method}
 \title{Overload of \code{is.na}}
 \arguments{
   \item{x}{A \code{Locus} object}

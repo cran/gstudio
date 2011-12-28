@@ -1,7 +1,7 @@
 \docType{methods}
 \name{allele.frequencies}
-\alias{allele.frequencies,Population-method}
 \alias{allele.frequencies}
+\alias{allele.frequencies,Population-method}
 \title{Returns a \code{Frequencies} object (or objects)}
 \arguments{
   \item{pop}{A \code{Population} object}

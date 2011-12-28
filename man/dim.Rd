@@ -1,7 +1,7 @@
 \docType{methods}
 \name{dim}
-\alias{dim,Population-method}
 \alias{dim}
+\alias{dim,Population-method}
 \title{Dimensions of the \code{Population}}
 \arguments{
   \item{x}{A \code{Population} object}

@@ -223,9 +223,10 @@ setMethod("Arith", signature(e1="Locus",e2="Locus"),
 		}
 		else if( .Generic[[1]] == "-" ) { # off - mom 
 			
-			if( length(e1) != 2 | length(e2) !=2)
-				stop("The subtraction operator is not supporte for non-diploid loci.")
-			
+			if( length(e1) != 2 | length(e2) !=2) {
+				warning("The subtraction operator is not supporte for non-diploid or missing loci.")
+				return(Locus(e1@alleles))
+			}
 			if( e1 == e2 ) { # same genotypes
 				if( is.heterozygote(e1) ) # heterozygote
 					return( e2 )

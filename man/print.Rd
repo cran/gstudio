@@ -1,8 +1,8 @@
 \docType{methods}
 \name{print}
+\alias{print}
 \alias{print,Frequencies-method}
 \alias{print,Locus-method}
-\alias{print}
 \title{Printing a locus object}
 \arguments{
   \item{x}{A \code{Locus} object}

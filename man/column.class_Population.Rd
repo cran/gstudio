@@ -1,9 +1,9 @@
 \docType{methods}
 \name{column.class}
-\alias{column.class,Population-method}
 \alias{column.class}
+\alias{column.class,Population-method}
 \title{Returns the indices of the data columns that are of type
-requested}
+	requested}
 \arguments{
   \item{pop}{A \code{Population} object}
 

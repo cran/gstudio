@@ -1,7 +1,7 @@
 \docType{methods}
 \name{row.names}
-\alias{row.names,Population-method}
 \alias{row.names}
+\alias{row.names,Population-method}
 \title{Overload row.names function for \code{Population}}
 \arguments{
   \item{x}{A \code{Population} object}

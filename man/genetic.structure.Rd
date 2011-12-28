@@ -2,9 +2,9 @@
 \alias{genetic.structure}
 \title{Main function for estimating genetic structure parameters}
 \usage{
-  genetic.structure(pop = NULL, stratum = NULL, loci =
-  NULL, mode = c("Gst", "Gst.prime", "Dest"), num.perm = 0,
-  verbose = FALSE, pairwise = FALSE)
+  genetic.structure(pop = NULL, stratum = NULL,
+    loci = NULL, mode = c("Gst", "Gst.prime", "Dest"),
+    num.perm = 0, verbose = FALSE, pairwise = FALSE)
 }
 \arguments{
   \item{pop}{A \code{\linkS4class{Population}} object}
@@ -20,7 +20,7 @@
   Current options include "Gst", "Gst.prime", and "Dest".}
 
   \item{num.perm}{The number of permutations to used for
-  significance testing. All significance is tested using
+  significance testing.  All significance is tested using
   permutation of individuals.}
 
   \item{verbose}{A logical flag to indicate the locus

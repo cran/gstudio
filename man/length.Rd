@@ -1,9 +1,9 @@
 \docType{methods}
 \name{length}
+\alias{length}
 \alias{length,Frequencies-method}
 \alias{length,Locus-method}
 \alias{length,Population-method}
-\alias{length}
 \title{Overload of \code{length}}
 \arguments{
   \item{x}{A \code{Locus} object}

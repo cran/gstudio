@@ -1,9 +1,9 @@
 \docType{methods}
 \name{show}
+\alias{show}
 \alias{show,Frequencies-method}
 \alias{show,Locus-method}
 \alias{show,Population-method}
-\alias{show}
 \title{Showing a locus object}
 \arguments{
   \item{x}{A \code{Locus} object}

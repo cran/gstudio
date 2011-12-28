@@ -1,7 +1,7 @@
 \docType{methods}
 \name{genotype.counts}
-\alias{genotype.counts,Population-method}
 \alias{genotype.counts}
+\alias{genotype.counts,Population-method}
 \title{Returns tally of genotypes}
 \arguments{
   \item{pop}{A \code{Population} object}

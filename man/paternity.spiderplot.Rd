@@ -2,8 +2,8 @@
 \alias{paternity.spiderplot}
 \title{Creates a graphical depiction of paternity}
 \usage{
-  paternity.spiderplot(pop = NULL, paternity = NULL, indID
-  = "IndID", X = "lon", Y = "lat", ...)
+  paternity.spiderplot(pop = NULL, paternity = NULL,
+    indID = "IndID", X = "lon", Y = "lat", ...)
 }
 \arguments{
   \item{pop}{A population that has all the individuals.}

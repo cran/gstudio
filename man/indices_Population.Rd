@@ -1,7 +1,7 @@
 \docType{methods}
 \name{indices}
-\alias{indices,Population-method}
 \alias{indices}
+\alias{indices,Population-method}
 \title{Returns the numeric indices of data column names}
 \arguments{
   \item{pop}{A \code{Population} object}

@@ -1,7 +1,7 @@
 \docType{methods}
 \name{he}
-\alias{he,Frequencies-method}
 \alias{he}
+\alias{he,Frequencies-method}
 \title{Gets expected heterozygosity}
 \arguments{
   \item{freqs}{A \code{Frequencies} object}

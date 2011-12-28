@@ -12,7 +12,7 @@
 \description{
   This prints the \code{summary.gstudio} S3 class.  Several
   of the objects found in the \code{gstudio} package are
-  summarized as \code{list} objcts. This prints out their
+  summarized as \code{list} objcts.  This prints out their
   content in a regular fashion.
 }
 \author{

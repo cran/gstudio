@@ -1,7 +1,7 @@
 \docType{methods}
 \name{column.names}
-\alias{column.names,Population-method}
 \alias{column.names}
+\alias{column.names,Population-method}
 \title{Returns data names for specific kind of class}
 \arguments{
   \item{pop}{A \code{Population} object}

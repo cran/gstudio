@@ -2,9 +2,9 @@
 \alias{population.graph}
 \title{Create a Population Graph from a data set}
 \usage{
-  population.graph(pop, stratum = NULL, loci = NULL, alpha
-  = 0.05, lat = "Latitude", lon = "Longitude", grouping =
-  NULL)
+  population.graph(pop, stratum = NULL, loci = NULL,
+    alpha = 0.05, lat = "Latitude", lon = "Longitude",
+    grouping = NULL)
 }
 \arguments{
   \item{pop}{A \code{Population} object}

@@ -2,8 +2,8 @@
 \alias{paternity}
 \title{Performs paternity exclusion using Fractional analysis}
 \usage{
-  paternity(pop, familyID = NULL, indCol = "IndID", offCol
-  = "OffID")
+  paternity(pop, familyID = NULL, indCol = "IndID",
+    offCol = "OffID")
 }
 \arguments{
   \item{pop}{A population that has all the individuals.}
@@ -34,7 +34,7 @@
   indexed by offCol (default='OffID'), that is used to
   differentiate among half-sibs within a maternal offspring
   array.  Mothers must have OffID=0 and all of her
-  offspring will have a non-zero value for this. This
+  offspring will have a non-zero value for this.  This
   approach allow you to have all your data kept in a single
   \code{Population}.
 }

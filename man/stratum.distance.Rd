@@ -2,9 +2,9 @@
 \alias{stratum.distance}
 \title{Calucluate pair-wise distance between stratum}
 \usage{
-  stratum.distance(pop, stratum, lat = "Latitude", lon =
-  "Longitude", mode = c("Great Circle", "Euclidean")[1],
-  subset)
+  stratum.distance(pop, stratum, lat = "Latitude",
+    lon = "Longitude",
+    mode = c("Great Circle", "Euclidean")[1], subset)
 }
 \arguments{
   \item{pop}{A \code{Population} object}

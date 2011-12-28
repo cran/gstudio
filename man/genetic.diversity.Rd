@@ -2,8 +2,9 @@
 \alias{genetic.diversity}
 \title{Estimates rarefied genetic diversity}
 \usage{
-  genetic.diversity(pop, stratum, loci, mode = c("A",
-  "A95", "Ae")[3], num.perm = 999, verbose = FALSE)
+  genetic.diversity(pop, stratum, loci,
+    mode = c("A", "A95", "Ae")[3], num.perm = 999,
+    verbose = FALSE)
 }
 \arguments{
   \item{pop}{A \code{Population} object}

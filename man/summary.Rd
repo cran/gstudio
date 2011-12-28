@@ -1,9 +1,9 @@
 \docType{methods}
 \name{summary}
+\alias{summary}
 \alias{summary,Frequencies-method}
 \alias{summary,Locus-method}
 \alias{summary,Population-method}
-\alias{summary}
 \title{Overload of \code{summary}}
 \arguments{
   \item{object}{A \code{Locus} object}

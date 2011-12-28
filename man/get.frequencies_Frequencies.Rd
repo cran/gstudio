@@ -1,7 +1,7 @@
 \docType{methods}
 \name{get.frequencies}
-\alias{get.frequencies,Frequencies-method}
 \alias{get.frequencies}
+\alias{get.frequencies,Frequencies-method}
 \title{Gets allele frequencies from pop}
 \arguments{
   \item{freqs}{A \code{Frequencies} object}

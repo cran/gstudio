@@ -3,8 +3,7 @@
 \title{Main function for estimating genetic distances}
 \usage{
   genetic.distance(pop = NULL, stratum = NULL, loci = NULL,
-  mode = c("Jaccard", "Bray", "AMOVA", "Euclidean",
-  "Cavalli", "Nei", "cGD"))
+    mode = c("Jaccard", "Bray", "AMOVA", "Euclidean", "Cavalli", "Nei", "cGD"))
 }
 \arguments{
   \item{pop}{A \code{Population} object}

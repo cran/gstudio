@@ -2,9 +2,9 @@
 \alias{congruence.graph}
 \title{Create a congruence graph from populations}
 \usage{
-  congruence.graph(popA, popB, stratum, mode = c("binary",
-  "ave")[2], alpha = 0.05, lat = "Latitude", lon =
-  "Longitude")
+  congruence.graph(popA, popB, stratum,
+    mode = c("binary", "ave")[2], alpha = 0.05,
+    lat = "Latitude", lon = "Longitude")
 }
 \arguments{
   \item{popA}{A \code{Population} object}

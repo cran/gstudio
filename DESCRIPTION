@@ -13,8 +13,8 @@ Description: This package was created to support population
     based upon allele frequencies, and the Population
     Graphs network analysis of spatial conditional genetic
     covariance.
-Version: 0.3
-Date: 2011-11-18
+Version: 0.5
+Date: 2011-12-28
 Depends: methods, MASS, igraph, RCurl
 Suggests: RUnit, HardyWeinberg, ecodist, pegas
 Collate: 'Locus-class.R' 'Population-class.R' 'Frequencies-class.R'
@@ -27,6 +27,6 @@ Collate: 'Locus-class.R' 'Population-class.R' 'Frequencies-class.R'
         'congruence.probability.R' 'read.pgraph.R' 'offspring.array.R'
         'minus.mom.R' 'exclusion.probability.R' 'paternity.R'
         'transition.probability.R' 'paternity.spiderplot.R'
-Packaged: 2011-11-25 12:51:06 UTC; dyer
+Packaged: 2011-12-28 16:09:53 UTC; rodney
 Repository: CRAN
-Date/Publication: 2011-11-25 15:55:50
+Date/Publication: 2011-12-30 16:26:38

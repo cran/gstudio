@@ -1,8 +1,8 @@
 \docType{methods}
 \name{names}
+\alias{names}
 \alias{names,Frequencies-method}
 \alias{names,Population-method}
-\alias{names}
 \title{Data column names in \code{Population} a locus object}
 \arguments{
   \item{x}{A \code{Population} object}

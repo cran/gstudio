@@ -11,8 +11,8 @@
 #'	subtracting the 
 #'
 #' @param pop A population from which the maternal component will be removed.
-#' @param indID The column heading for the Individual ID number (Default="IndID")
-#' @param offID The column heading for the Offspring ID number (Default="OffID")
+#' @param indCol dataThe column heading for the Individual ID number (Default="IndID")
+#' @param offCol The column heading for the Offspring ID number (Default="OffID")
 #' @return A \code{Population} of offspring that have reduced genotypes.
 #' @note When mother and offspring share the same heterozygote genotype then 
 #'	it is impossible to determine which allele the mother provided.  In these
@@ -24,21 +24,20 @@
 #' @author Rodney J. Dyer <rjdyer@@vcu.edu>
 #' @export
 
-minus.mom <- function( pop, indID="IndID", offID="OffID" ){
+minus.mom <- function( pop, indCol="IndID", offCol="OffID" ){
 	loci <- column.class( pop, "Locus" )
 	if( !length(loci))
 		stop("You need to have some genetic data if you want to pull it apart.")
 
-	offspring <- pop[ pop[[offID]] != 0, ]
-				
+	offspring <- pop[ pop[[offCol]] != 0, ]				
 	K <- length(offspring[,1])
-	
 	for(i in 1:K) {
-		famID = offspring[[indID]][i]
-		mom = pop[ pop[[indID]]==famID & pop[[offID]]==0, ]
-		if( length(mom) == length(pop) ){
-		for( col in loci )
-			offspring[i,col] <- offspring[i,col] - mom[1,col]
+		famID = offspring[[indCol]][i]
+		mom = pop[ pop[[indCol]]==famID & pop[[offCol]]==0, ]
+		if( length(mom) == length(pop) & length(mom[,1]) ){
+			for( col in loci ) {
+				offspring[i,col] <- offspring[i,col] - mom[1,col]
+			}
 		}
 	}
 	return(offspring)

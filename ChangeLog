@@ -1,24 +1,22 @@
-2011-08-12 Rodney J. Dyer <rjdyer@vcu.edu> version = 0.1
-- [NEW] S4 class for Locus
-- [NEW] S4 class for Population
-- [NEW] S4 class forAlleleFrequencies
-- [NEW] genetic.distance() 
-- [NEW] genetic.structure() 
-- [NEW] read.population()
-- [NEW] population.graph()
+UPCOMING:
+- [ADD] spatial autocorrelation using Smouse & Peakall (1999)
+- [NEW] save.population() to text, STRUCTURE, and XXXX
+- [NEW] added human data set to example data 
+- [ADD] added congruence examples to PopulationGraph vignette.
+- [ADD] Congruence of topologies for population graphs
+- [ADD] Example of amova in genetic.structure
+- [ADD] Fst (coalescent time) added to genetic.structure
+- [ADD] add drop.one option to multivariate.loci option
+- [ADD] stamova
 
-2011-08-26 Rodney J. Dyer <rjdyer@vcu.edu> version = 0.2
-- [FIX] Vignette names (popgraph was coming out as genetic structure) and new vignettes for the offspring analysis
-- [ADD] option 'verbose' for genetic.structure to toggle printing of progress for longer jobs.
-- [NEW] great.circle.distance() and stratum.distance() functions added to calculate physical separation amongst sites.
-- [NEW] google.pie.chart() function to make pie icons for population plotting
-- [NEW] pies.on.map() function to create KML file for examining allele frequencies of strata
-- [CHANGE] population.graph() added routines to incorporate latitude, longitude, and grouping into the graph representation for spatial plotting.
-- [NEW] popgraph.on.map() function to create KML file for population graphs
-- [NEW] genetic.diversity() function to estimate diversity statistics using rarefaction.
-- [NEW] Vignette on genetic.diversity
-- [NEW] Vignette on mapping 'GStudio Mapping'
-- [NEW] stratum.distance() function to get physical distances between populations.
+2011-12-28 Rodney J. Dyer <rjdyer@vcu.edu> version = 0.5
+- [FIX] Vignette problem
+
+2011-12-28 Rodney J. Dyer <rjdyer@vcu.edu> version = 0.4
+- [FIX] Fixed problem with subtracting alleles from NA data
+- [FIX] Fixed issue when trying to subtract mother genotypes from family if mom is missing (see above)
+- [FIX] Standardized individual and offspring indices for data columns for parent/offspring routines.
+- [FIX] Reduced the size of the vignettes to below suggested limit.
 
 2011-11-25 Rodney J. Dyer <rjdyer@vcu.edu> version = 0.3
 - [NEW] congruence.graph() function to create congruence topologies
@@ -39,16 +37,29 @@
 - [NEW] paternity.spiderplot(pop,paternity) Makes graphical output of paternity
 - [FIX] fixed cGD estimation in genetic.distance function.
 
-UPCOMING:
-- [ADD] spatial autocorrelation using Smouse & Peakall (1999)
-- [NEW] save.population() to text, STRUCTURE, and XXXX
-- [NEW] added human data set to example data 
-- [ADD] added congruence examples to PopulationGraph vignette.
-- [ADD] Congruence of topologies for population graphs
-- [ADD] Example of amova in genetic.structure
-- [ADD] Fst (coalescent time) added to genetic.structure
-- [ADD] add drop.one option to multivariate.loci option
-- [ADD] stamova
+2011-08-26 Rodney J. Dyer <rjdyer@vcu.edu> version = 0.2
+- [FIX] Vignette names (popgraph was coming out as genetic structure) and new vignettes for the offspring analysis
+- [ADD] option 'verbose' for genetic.structure to toggle printing of progress for longer jobs.
+- [NEW] great.circle.distance() and stratum.distance() functions added to calculate physical separation amongst sites.
+- [NEW] google.pie.chart() function to make pie icons for population plotting
+- [NEW] pies.on.map() function to create KML file for examining allele frequencies of strata
+- [CHANGE] population.graph() added routines to incorporate latitude, longitude, and grouping into the graph representation for spatial plotting.
+- [NEW] popgraph.on.map() function to create KML file for population graphs
+- [NEW] genetic.diversity() function to estimate diversity statistics using rarefaction.
+- [NEW] Vignette on genetic.diversity
+- [NEW] Vignette on mapping 'GStudio Mapping'
+- [NEW] stratum.distance() function to get physical distances between populations.
+
+2011-08-12 Rodney J. Dyer <rjdyer@vcu.edu> version = 0.1
+- [NEW] S4 class for Locus
+- [NEW] S4 class for Population
+- [NEW] S4 class forAlleleFrequencies
+- [NEW] genetic.distance() 
+- [NEW] genetic.structure() 
+- [NEW] read.population()
+- [NEW] population.graph()
+
+
 
 
 

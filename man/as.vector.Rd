@@ -1,7 +1,7 @@
 \docType{methods}
 \name{as.vector}
-\alias{as.vector,Locus-method}
 \alias{as.vector}
+\alias{as.vector,Locus-method}
 \title{Overload of \code{as.vector}}
 \arguments{
   \item{x}{A \code{Locus} object}

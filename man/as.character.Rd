@@ -1,7 +1,7 @@
 \docType{methods}
 \name{as.character}
-\alias{as.character,Locus-method}
 \alias{as.character}
+\alias{as.character,Locus-method}
 \title{Overload of \code{as.character} function}
 \arguments{
   \item{x}{A \code{Locus} object}

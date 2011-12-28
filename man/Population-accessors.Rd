@@ -1,18 +1,18 @@
 \docType{methods}
 \name{names<-}
-\alias{[,Population-method}
-\alias{[[,Population-method}
-\alias{[<-,Population-method}
-\alias{$,Population-method}
-\alias{$<-,Population-method}
-\alias{names<-,Population-method}
 \alias{[-Population-accessors}
+\alias{[,Population-method}
 \alias{[[-Population-accessors}
+\alias{[[,Population-method}
 \alias{[<--Population-accessors}
+\alias{[<-,Population-method}
 \alias{$}
+\alias{$,Population-method}
 \alias{$<-}
+\alias{$<-,Population-method}
 \alias{append}
 \alias{names<-}
+\alias{names<-,Population-method}
 \title{Set names of data columns in the \code{Population}}
 \arguments{
   \item{x}{A \code{Population} object}
