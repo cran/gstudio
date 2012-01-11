@@ -1,27 +1,8 @@
-%
-%  GStudio Documentation: GeneticStructure
-%
-%  Created by dyer on 2011-07-20.
-\documentclass[letterpaper]{article}
-\usepackage[margin=1in]{geometry}
-\usepackage{amsmath} % for better align*
-\usepackage{Sweave}
-\usepackage[parfill]{parskip}
-\usepackage{color}
+
+\chapter{Genetic Structure}
 
 
-\title{Genetic Structure}
-\author{Rodney J. Dyer\\\small Department of Biology\\\small Virginia Commonwealth University\\\footnotesize http://dyerlab.bio.vcu.edu}
-\date{}
-
-
-%\VignetteIndexEntry{Genetic Structure}
-
-
-\begin{document}
-\maketitle
-
-\section*{Synopsis}
+\section{Synopsis}
 
 Estimation of genetic structure is a fundamental process in population genetic analyses.  Broadly defined, structure can be defined as the non-random association of genotypes and alleles in populations due to evolutionary processes such as gene flow, drift, selection, and inbreeding.  For this, the \emph{Araptus attenuatus} data set and will be used again.
 
@@ -31,7 +12,7 @@ data(araptus_attenuatus)
 baja <- araptus_attenuatus[araptus_attenuatus$Species != "CladeB",]
 @
 
-\section*{Genotype Frequencies}
+\section{Genotype Frequencies}
 
 The manner by which alleles are arranged into genotypes tells us a lot about the history of a species.  The structure statistic that are presented below all rely upon estimation of genotype frequencies so a brief digression to talk about genotype frequencies is in order.
 
@@ -67,7 +48,7 @@ exp
 
 As you can see there are fewer heterozygotes than expected ($N_{hets;\;exp}=$ \Sexpr{ round( 2 * exp[1,2] ) }, $N_{hets;\;obs}=$\Sexpr{obs[2]}). 
 
-\section*{Hardy-Weinberg Equilibrium}
+\section{Hardy-Weinberg Equilibrium}
 
 While the \texttt{gstudio} package provides the basic units for population genetic analyses, there are already some very good packages that conduct analyses like testing for Hardy-Weinberg Equilbrium\footnote{There are many other functional packages on cran.r-project.org and you should always make sure someone hasn't already solved a problem for you before you try to code up a solution.}.
 
@@ -78,7 +59,7 @@ HWChisq(ltrs.genoytpes,verbose=T)
 @
 
 
-\section*{Structure Parameters}
+\section{Structure Parameters}
 
 Population structure parameters are fundamental tools for population genetics and have been perhaps, the most poorly understood and misused as well.  At the end of this section, some examples of the differences between the parameters is given.
 
@@ -94,7 +75,7 @@ Finally, of note here is that all these parameters use a sample-size corrected e
 Where $\mu$ is the harmonic mean strata size and k is the number of stratum.  As you can see as $\mu$ gets larger $\hat{H}_S \to H_S$, which translates to "if you have more samples, you can get a better estimate of the average heterozygosity" and as $k$ get larger, $\hat{H}_T \to H_T$ which says the same thing about the number of populations.  The take-home here is that you need many samples from many places.
 
 
-\subsection*{The $G_{ST}$ Parameter}
+\subsection{The $G_{ST}$ Parameter}
 
 The parameter $G_{ST}$ is an estimate of the reduction in heterozygosity due to individuals being in different populations.  It is functionally equivalent to $F_{ST}$ from Wright and as he points out, it is not a measure of differentiation in the way that we think of differentiation.  Rather it is a measure of the extent to which populations have gone to fixation.  It is estimated as: 
 
@@ -111,7 +92,7 @@ gst.baja <- genetic.structure(baja,stratum="Pop",loci="EN",mode="Gst",num.perm=9
 print(gst.baja)
 @
 
-\subsection*{The $G_{ST}^\prime$ Parameter}
+\subsection{The $G_{ST}^\prime$ Parameter}
 
 The parameter $G_{ST}^\prime$ was introduced by Hedrick (20XX) in response to the observation that the parameter $G_{ST}$ is not insensitive to the number of alleles at a locus.  Fixing this is done by standardizing the estimate of $G_{ST}$ by the maximal is can be given the number of alleles present, essential a restandardization to the [0,1] range.  This is done by:
 
@@ -128,7 +109,7 @@ print(gst.prime.baja)
 
 
 
-\subsection*{The $D_{EST}$ Parameter}
+\subsection{The $D_{EST}$ Parameter}
 
 It has been pointed out that even with the corrections for large numbers of alleles, $G_{ST}^\prime$ may not be acting like a statistic of "differentiation" in the way that we think of differentiation.  For example consider the following code where I make three populations, the first one fixed for the "1" allele and the next fixed for the "2" (sure this is an extreme point, but Wright originally made it and it should be repeated).
 
@@ -173,7 +154,7 @@ Dest.baja <- genetic.structure(baja,stratum="Pop","EN",mode="Dest",num.perm=999)
 print(Dest.baja)
 @
 
-\section*{Pairwise Structure}
+\section{Pairwise Structure}
 
 The \texttt{genetic.structure} function can also be used to estimate pairwise estimates of each parameter using the optional \texttt{pairwise} flag.  
 
@@ -181,8 +162,3 @@ The \texttt{genetic.structure} function can also be used to estimate pairwise es
 sonora <- araptus_attenuatus[araptus_attenuatus$Species=="CladeB",]
 genetic.structure(sonora,"Pop",loci="EN",mode="Gst.prime", pairwise=TRUE)
 @
-
-
-
-
-\end{document}

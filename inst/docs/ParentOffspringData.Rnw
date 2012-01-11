@@ -2,42 +2,24 @@
 %  GStudio Documentation: DataImport
 %
 %  Created by dyer on 2011-07-20.
-\documentclass[letterpaper]{article}
-\usepackage[margin=1in]{geometry}
-\usepackage{Sweave}
-\usepackage[parfill]{parskip}
-\usepackage{color}
-
-
-\title{Parent Offspring Data}
-\author{Rodney J. Dyer\\\small Department of Biology\\\small Virginia Commonwealth University\\\footnotesize http://dyerlab.bio.vcu.edu}
-\date{}
-
-
-%\VignetteIndexEntry{Parent Offspring Data}
-
-
-\begin{document}
-\maketitle
 
 
 
-\section*{Synopsis}
+\chapter{Parent Offspring Data}
+
+\section{Synopsis}
 
 There are several cases where you have data that consists of both adults and offspring.  With these kinds of data, there are some interesting kinds of analyses available for examining structure and diversity.  The functionality that \texttt{gstudio} provides focuses on translations of offspring data into common formats that can be analyzed using regular routines.
 
 
-\section*{Getting Data}
+\section{Getting Data}
 
 The use of GoogleDocs as a repository for your data is not unique to parent-offspring data and is used here to demonstrate how to utilize this options.  There is a more detailed discussion of how to set up your GoogleSpreadsheets so that you can access them in the \texttt{DataImport} vignette.  In what follows, I will use the \emph{Cornus florida} data.  I split URL (see Data Import) because it was so long it trailed off the page...  
 
-<<echo=true,eval=true>>=
+<<>>=
 require(gstudio)
-baseURL <- "https://docs.google.com/spreadsheet/pub?hl=en_US&hl=en_US&"
-key <- "key=0Aq-lsUWPDuZtdF9xMXZGQWNtbk1FNTVWd3F3U0FDdXc&single=true&gid=0&"
-range <- "range=A1%3AI63&output=csv"
-cornusURL <- paste(baseURL,key,range,sep="")
-cornus <- read.population( googleURL=cornusURL)
+data(cornus_florida)
+cornus <- cornus_florida
 @
 
 The structure of adult/offspring data is just like any other kind of data and can consist of covariates such as physical location, size, etc. along with strata and loci.  The distinction is that there must be \emph{at least} two strata columns:
@@ -61,11 +43,11 @@ adults
 @
 
 
-\section*{Pollen Pools}
+\section{Pollen Pools}
 
 Since my research is primarily focused on the analysis of plant populations and mother/offspring combinations provide information about pollen donors, naturally these kinds of analyses will be the first kind to have functionality.
 
-\subsection*{Minus Mom}
+\subsection{Minus Mom}
 
 If you have the collection of offspring and a mother, you can estimate pollen pool allele frequencies as by subtracting the maternal contribution to each genotype and then estimating the allele frequencies of the paternal components (this could be reversed if you have father/offspring data and need to estimate maternal genotype frequencies just as easily).
 
@@ -86,7 +68,7 @@ freqs.unreduced.G8
 
 where the genotype of each offspring has 50\% of the mother's genotype.
 
-\subsection*{Genetic Distances and Structure (e.g., 2Gener)}
+\subsection{Genetic Distances and Structure (e.g., 2Gener)}
 
 The reduced genotypes can be used in traditional genetic analyses as any other type of genetic data.  For example, the Two-Generation Analysis of Pollen Structure (hereafter 2Gener; Smouse \emph{et al.} 2001, Dyer \emph{et al.} 2004) is essentially an AMOVA analysis on pollen donor genotypes.  This is a bit of a manual version of it but it can be conducted as (in the next version I'll add a the AMOVA/2Gener options to the \texttt{genetic.structure} function).
 
@@ -98,7 +80,7 @@ Moms <- as.factor( offs$IndID )
 amova(D ~ Moms)
 @
 
-\section*{Paternity}
+\section{Paternity}
 
 The \texttt{gstudio} package has some basic functionality regarding estimating paternity (or maternity if you have those kinds of data).  Thus far, only fractional paternity is implemented and only basically.  
 
@@ -147,13 +129,10 @@ paternity.spiderplot(cornus,pat,X="X",Y="Y", bty="n", xlab="X", ylab="Y")
 
 \begin{figure}
 	\centering
-	\includegraphics{ParentOffspringData-spiderplot}
+<<fig=T>>=
+<<spiderplot>>
+@
 	\caption{Spatial pattern of parentage for family 474 in the \emph{Cornus florida} dataset.  Darkness of the lines indicated fractional paternity (light=less, darker=greater).}
 \end{figure}
 
 
-
-
-
-
-\end{document}

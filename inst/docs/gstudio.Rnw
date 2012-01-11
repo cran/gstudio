@@ -1,0 +1,73 @@
+%
+%  Dyerlab Documentation: gstudio vignette
+%
+%  Created by Rodney Dyer on Wed 11 January 2012.
+%
+\documentclass[letterpaper,twoside,openany]{book}
+\usepackage[margin=0.75in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[scaled=0.8]{helvet}
+\renewcommand*\familydefault{\sfdefault}
+\usepackage{kmath,kerkis}
+\usepackage{parskip}
+\usepackage{makeidx}
+\usepackage{Sweave}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{curves}
+\usepackage{color}
+\definecolor{header}{RGB}{79,129,189}
+\newcommand{\Heading}[1]{\textcolor{header}{\Large \bfseries #1}}
+
+\title{The \texttt{gstudio} Package}
+\author{Rodney J. Dyer\\Department of Biology\\Virginia Commonwealth University}
+\date{\today}
+
+%\VignetteIndexEntry{gstudio Overview}
+
+
+\begin{document}
+\pagestyle{empty}
+\maketitle
+\SweaveOpts{prefix.string=gstudio}
+\frontmatter
+
+
+
+
+\chapter{Preface}
+
+This document is intended to be a more in-depth overview of the functionality contained in the \texttt{gstudio} package.  This package is released under the GPL so if you have particular additions you would like to make to it, feel free to submit them to rjdyer@vcu.edu.
+
+\tableofcontents
+
+
+\mainmatter
+
+\SweaveInput{DataImport}
+\SweaveInput{AlleleFrequencies}
+\SweaveInput{GeneticDiversity}
+\SweaveInput{GeneticDistance}
+\SweaveInput{GeneticStructure}
+\SweaveInput{ParentOffspringData}
+\SweaveInput{PopulationGraphs}
+\SweaveInput{GStudioMapping}
+
+\backmatter
+
+\chapter{Bibliography}
+
+Bray JR, Curtis JT.  1957.  An ordination of upland forest communities of southern Wisconsin. \emph{Ecological Monographs} {\bf 27}:325-349.
+
+Cavalli-Sforza LL, Edwards AWF. 1967. Phylogenetic analysis: models and estimation procedures. \emph{American Journal Human Genetics}, \textbf{19}, 233-257.
+
+Dyer RJ, Nason JD. 2004.  Population Graphs: The graph-theoretic shape of genetic structure. \emph{ Molecular Ecology}, \textbf{13}, 1713-1728.
+
+Dyer RJ, Nason JD, Garrick RC.  2010.  Landscape modeling of gene flow: Improved power using conditional genetic distance derived from the topology of population networks.  \emph{Molecular Ecology}, \textbf{19}, 3746-3759.
+
+Smouse, PE and R Peakall (1999)  Genetics
+
+\printindex
+
+
+\end{document}

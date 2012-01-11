@@ -1,32 +1,10 @@
-%
-%  GStudio Documentation: GeneticDistance
-%
-%  Created by dyer on 2011-07-20.
-\documentclass[letterpaper]{article}
-\usepackage[margin=1in]{geometry}
-\usepackage{Sweave}
-\usepackage[parfill]{parskip}
-\usepackage{color}
-\usepackage{amssymb}
-\usepackage{curves}
+\chapter{Genetic Distance}
 
-\title{Genetic Distance}
-\author{Rodney J. Dyer\\\small Department of Biology\\\small Virginia Commonwealth University\\\footnotesize http://dyerlab.bio.vcu.edu}
-\date{}
-
-
-
-%\VignetteIndexEntry{Genetic Distances}
-
-
-\begin{document}
-\maketitle
-
-\section*{Synopsis}
+\section{Synopsis}
 
 The analysis of genetic data is largely an analysis of distances; distances among frequencies, distances among centroids of populations, etc.
 
-\section*{Genetic Distances Among Individuals}
+\section{Genetic Distances Among Individuals}
 
 In these examples, the data from \emph{Araptus attenuatus} will be used again but this time we'll use the subset of individuals from "CladeB" (mainland populations).
 
@@ -37,7 +15,7 @@ sonora <- araptus_attenuatus[ araptus_attenuatus$Species=="CladeB" , ]
 summary(sonora)
 @
 
-\subsection*{Jaccard Distance}
+\subsection{Jaccard Distance}\index{Individual Distance!Jaccard}
 
 Jaccard distance is a set-theoretic distance quantifying dissimilarity.  Assuming that loci are sets of alleles, the Jaccard dissimilarity between genotypes $A$ and $B$ is given by:
 
@@ -54,7 +32,7 @@ dim(d.jaccard$LTRS)
 
 YOu can look at the elements of the LTRS matrix (it is 36x36 so I am not printing it out here).  With \texttt{mode="Jaccard"}, missing genotypes will result in \texttt{NA} rows and columns in the distance matrix.  It is no entirely clear how this metric can easily handle missing genotypes.
 
-\subsection*{Bray-Curtis Distance}
+\subsection{Bray-Curtis Distance}\index{Individual Distance!Bray}
 
 Bray-Curtis Distance (Bray \& Curtis 1957) has been primarily used to quantify differences in species composition.  It is defined as the total number of species that are unique to either of the two sites standardized by the number of species in both sites.  
 
@@ -69,7 +47,7 @@ d.bray <- genetic.distance(sonora,stratum="Pop",loci=c("LTRS","EN"),mode="Bray")
 summary(d.bray)
 @
 
-\subsection*{AMOVA Distance}
+\subsection{AMOVA Distance}\index{Individual Distance!AMOVA}
 
 The final individual-based approach is based upon the Analysis of Molecular Variance (AMOVA) analysis.  A geometric interpretation of this genetic distance is given in Figure \ref{fig:amova_geometry} indicating distances among diploid genotypes.  
 
@@ -138,7 +116,7 @@ summary(d.amova)
 
 There are several other measures of individual-to-individual distance such as relatedness and coancestry.  These are not currently implemented in \texttt{R} but may become available in the near future.  That being said, it is probably something not too difficult for someone to extend these functions with their own code.
 
-\subsection*{Differences Between Distances}
+\subsection{Differences Between Distances}
 
 These three distances are correlated, and here we can look at how close they are for this three allele locus in \emph{Euphorbia lomelii}.  They will be transformed from a \texttt{dist} matrix object into columns within a \texttt{data.frame} and then their relationship can be tested using \texttt{cor.test}.
 
@@ -151,7 +129,9 @@ pairs(df)
 
 \begin{figure}[bth]
 	\centering
-	\includegraphics{GeneticDistance-sonora_ind_dist}
+<<include=true>>=
+<<sonora_ind_dist>>
+@
 	\caption{Relationship among three individual genetic distance metrics estimated for individual \emph{Araptus attenuatus} individuals in Sonora \& Sinoloa, Mexico.}
 	\label{fig:sonora_ind_dist}
 \end{figure}
@@ -161,13 +141,13 @@ pairs(df)
 
 \clearpage
 
-\section*{Genetic Distance Among Strata}
+\section{Genetic Distance Among Strata}
 
 
 Genetic distances can also be estimated among groups of individuals.  The same data will be used here but since there are only three populations, we'll be able to see the whole distance matrix. 
 
 
-\subsection*{Euclidean Distance}
+\subsection{Euclidean Distance}\index{Strata Distance!Euclidean}
 
 Euclidean distance is the most straight-forward distance metric available as it is essentially straight-line distance based upon the allele frequencies in each population.  It is given by:
 
@@ -226,7 +206,7 @@ d.eucl
 
 
 
-\subsection*{Cavalli-Sforza Distance}
+\subsection{Cavalli-Sforza Distance}\index{Strata Distance!Cavalli}
 
 Another distance approach that is commonly used for microsatellite loci is Cavalli-Sforza distance, $D_C$ (Cavalli-Sforza and Edwards, 1967).  Here population allele frequencies are plot on the surface of a sphere (radius=1) using the square root of the allele frequencies.  
 
@@ -272,7 +252,7 @@ d.cavalli
 
 
 
-\subsection*{Nei's Genetic Distance}
+\subsection{Nei's Genetic Distance}\index{Strata Distance!Nei}
 
 Nei's genetic distance is based upon mutation drift equilibrium therefore you should be reasonably comfortable with the notion that your populations have been separated a sufficient period of time such that drift and mutation may have played a significant role in their structure.
 
@@ -295,14 +275,19 @@ d.nei
  
 
 
-\subsection*{Conditional Genetic Distance}
+\subsection{Conditional Genetic Distance}\index{Strata Distance!cGD}
 
-Conditional genetic distance ($cGD$, Dyer et al. 2010) is a graph-theoretic genetic distance derived from Population Graphs (Dyer and Nason 2004)
+Conditional genetic distance ($cGD$, Dyer et al. 2010) is a graph-theoretic genetic distance derived from Population Graphs (Dyer and Nason 2004).  In some cases it has been shown to be more sensitive to landscape features and heterogeneity in dispersal than structure statistics and other distance metrics (see Dyer et al. 2010).
+
+<<>>=
+d.cgd <- genetic.distance(sonora,"Pop","EN","cGD")
+d.cgd
+@
 
 
 
 
-\section*{Isolation-By-Distance}
+\section{Isolation-By-Distance}
 
 
 Under models with restrictions in gene flow, there is an expectation that genetic distance should increase with physical separation.  Using populations found along the Baja Peninsula, it is pretty easy to see which one of these among-strata distance approaches provides a better fit to the data.
@@ -312,8 +297,9 @@ baja <- araptus_attenuatus[araptus_attenuatus$Species != "CladeB", ]
 euc <- genetic.distance(baja,"Pop","EN","Euclidean")$EN
 cav <- genetic.distance(baja,"Pop","EN","Cavalli")$EN
 nei <- genetic.distance(baja,"Pop","EN","Nei")$EN
+cgd <- genetic.distance(sonora,"Pop","EN","cGD")$EN
 phys <- stratum.distance(baja,"Pop",lat="Lat",lon="Long")
-df <- data.frame(Euclidean=euc[lower.tri(euc)], Cavalli=cav[lower.tri(cav)], Nei=nei[lower.tri(nei)], Physical.Dist=phys[lower.tri(phys)] )
+df <- data.frame(Euclidean=euc[lower.tri(euc)], Cavalli=cav[lower.tri(cav)], Nei=nei[lower.tri(nei)], cGD=cgd[lower.tri(cgd)], Physical.Dist=phys[lower.tri(phys)] )
 pairs( df )
 cor(df)
 @
@@ -321,23 +307,10 @@ cor(df)
 
 \begin{figure}[bth]
 	\centering
-	\includegraphics{GeneticDistance-sonora_strata_dist}
+<<include=T>>=
+<<sonora_strata_dist>>
+@
 	\caption{Relationship among strata genetic distance metrics estimated for \emph{Araptus attenuatus} sites in Baja California along with physical distance.}
 	\label{fig:sonora_strata_dist}
 \end{figure}
 
-
-
-\section*{Bibliography}
-
-Bray, JR and JT Curtis  (1957) An ordination of upland forest communities of southern Wisconsin. \emph{Ecological Monographs} {\bf 27}:325-349.
-
-Cavalli-Sforza LL and AWF Edwards 1967. Phylogenetic analysis: models and estimation procedures. American Journal Human Genetics \textbf{19}: 233-257.
-
-Dyer RJ and JD Nason  2004  Population Graphs: The graph-theoretic shape of genetic structure.  Molecular Ecology \textbf{13}: 1713-1728.
-
-Dyer RJ, JD Nason, and RC Garrick 2010  Landscape modeling of gene flow: Improved power using conditional genetic distance derived from the topology of population networks.  Molecular Ecology \textbf{19}: 3746-3759.
-
-Smouse, PE and R Peakall (1999)  Genetics
-
-\end{document}

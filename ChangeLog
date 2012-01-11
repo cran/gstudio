@@ -9,6 +9,9 @@ UPCOMING:
 - [ADD] add drop.one option to multivariate.loci option
 - [ADD] stamova
 
+2012-01-11 Rodney J. Dyer <rjdyer@vcu.edu> version = 0.6
+- [CHANGE] Moved all the separate vignettes into a single document
+
 2011-12-28 Rodney J. Dyer <rjdyer@vcu.edu> version = 0.5
 - [FIX] Vignette problem
 

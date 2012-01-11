@@ -1,27 +1,6 @@
-%
-%  GStudio Documentation: GeneticDiversity
-%
-%  Created by dyer on 2011-08-24.
-\documentclass[letterpaper]{article}
-\usepackage[margin=1in]{geometry}
-\usepackage{amsmath} % for better align*
-\usepackage{Sweave}
-\usepackage[parfill]{parskip}
-\usepackage{color}
+\chapter{Genetic Diversity}
 
-
-\title{Genetic Diversity}
-\author{Rodney J. Dyer\\\small Department of Biology\\\small Virginia Commonwealth University\\\footnotesize http://dyerlab.bio.vcu.edu}
-\date{}
-
-
-%\VignetteIndexEntry{Genetic Diversity}
-
-
-\begin{document}
-\maketitle
-
-\section*{Synopsis}
+\section{Synopsis}
 
 Genetic diversity is measure of within stratum variance and there are several methods available for the estimation of diversity.  In a general sense, we will be using measures of allelic richness from the Baja California data set, which can easily be found my examining the \texttt{Frequencies} of the loci.
 
@@ -44,7 +23,7 @@ In this data set, the raw allelic diversity across all the samples range from \S
 
 To overcome both of these issues, the \texttt{genetic.diversity} function is used.
 
-\subsection*{Rarefaction}
+\subsection{Rarefaction}
 
 Before we get into the nitty-gritty, the basic concept of rarefaction should be examined.  Rarefaction is a permutation technique that can be used to standardize samples based upon sample allocation and is an old friend to ecologists.  
 
@@ -52,7 +31,7 @@ For our purposes, we will consider rarefaction as a subsampling of alleles in st
 
 The function \texttt{genetic.diversity} takes random samples of the alleles within each population and recomputes the requested allelic diversity statistic.  While in many ecological studies, rarefaction is depicted as an accumulation curve (they are generally interested in sampling intensity), \texttt{genetic.diversity} only reports the distribution at the largest size where all strata are equal (e.g., the number of alleles present in the smallest population). 
 
-\section*{Allelic Diversity: $A$}
+\section{Allelic Diversity: $A$}
 
 The parameter \emph{A} is solely a measure of the number of alleles at a locus.  If a population has a single individual with a single copy of allele $A$ and everyone else has allele $C$, $A=2$, which is the same case as if half the population was homozygous for $A$ and the remaining individuals were homozygous for $C$.  The function \texttt{genetic.diversity} returns an object that can be both printed and examined in plot fashion (by default it is a boxplot)
 
@@ -64,7 +43,7 @@ plot(A)
 
 The plot itself is a horizontal \texttt{boxplot}.  If you conduct the analysis with either the \texttt{loci} missing or as a list of loci, the results from each locus will be displayed in the terminal and the plotting will cycle through each locus requiring some input from the keyboard.  It is also possible to plot just a single locus by passing the locus name as a second parameter to the \texttt{plot} command.
 
-\section*{Allelic Diversity of Non-Rare Alleles: $A_{95}$}
+\section{Allelic Diversity of Non-Rare Alleles: $A_{95}$}
 
 The parameter $A_{95}$ ignores rare alleles by not counting those whose frequencies are below 95\% \emph{within} the stratum.  So alleles locally rare will not be counted and in general $A >= A_{95}$.
 
@@ -75,7 +54,7 @@ plot(A95)
 @
 
 
-\section*{Effective Allelic Diversity: $A_e$}
+\section{Effective Allelic Diversity: $A_e$}
 
 The last diversity statistic is $A_e$, which is another frequency corrected allelic diversity statistic.  For a locus with $\ell$ alleles, each of which occurs at a frequency of $p_i$, the effective number of alleles is:
 
@@ -93,6 +72,3 @@ plot(Ae)
 
 One obvious difference in $A_e$ from the others is that it is not an integer value (both $A$ and $A95$ are integers) and as such can show a bit more granularity.
 
-
-
-\end{document}

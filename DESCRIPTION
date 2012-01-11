@@ -5,16 +5,15 @@ Title: GeneticStudio packages for R.
 Type: Package
 LazyLoad: yes
 Author: Rodney J. Dyer <rjdyer@vcu.edu>
-Description: This package was created to support population
-    genetics and landscape genetic courses I teach at
-    Virginia Commonwealth University.  This package
-    contains classes and functions for the analysis of
-    marker data to include structure statistics, analyses
-    based upon allele frequencies, and the Population
-    Graphs network analysis of spatial conditional genetic
-    covariance.
-Version: 0.5
-Date: 2011-12-28
+Description: This package was created to support population genetics
+        and landscape genetic courses I teach at Virginia Commonwealth
+        University.  This package contains classes and functions for
+        the spatial analysis of marker data to include structure
+        statistics, analyses based upon allele frequencies, and the
+        Population Graphs network analysis of spatial conditional
+        genetic covariance.
+Version: 0.6
+Date: 2012-01-11
 Depends: methods, MASS, igraph, RCurl
 Suggests: RUnit, HardyWeinberg, ecodist, pegas
 Collate: 'Locus-class.R' 'Population-class.R' 'Frequencies-class.R'
@@ -27,6 +26,6 @@ Collate: 'Locus-class.R' 'Population-class.R' 'Frequencies-class.R'
         'congruence.probability.R' 'read.pgraph.R' 'offspring.array.R'
         'minus.mom.R' 'exclusion.probability.R' 'paternity.R'
         'transition.probability.R' 'paternity.spiderplot.R'
-Packaged: 2011-12-28 16:09:53 UTC; rodney
+Packaged: 2012-01-11 19:31:15 UTC; rodney
 Repository: CRAN
-Date/Publication: 2011-12-30 16:26:38
+Date/Publication: 2012-01-12 09:24:34

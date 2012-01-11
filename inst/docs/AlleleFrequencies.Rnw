@@ -1,34 +1,13 @@
-%
-%  GStudio Documentation: AlleleFrequencies
-%
-%  Created by dyer on 2011-07-20.
-\documentclass[letterpaper]{article}
-\usepackage[margin=1in]{geometry}
-\usepackage{Sweave}
-\usepackage[parfill]{parskip}
-\usepackage{color}
+\chapter{Summarizing Genetic Data}
 
-
-\title{Summarizing Genetic Data}
-\author{Rodney J. Dyer\\\small Department of Biology\\\small Virginia Commonwealth University\\\footnotesize http://dyerlab.bio.vcu.edu}
-\date{}
-
-
-
-%\VignetteIndexEntry{Allele Frequencies}
-
-
-\begin{document}
-\maketitle
-
-\section*{Synopsis}
+\section{Synopsis}
 
 There are several ways you can summarize genetic data and here we will cover some simple approaches and introduce another class that aids in the analysis of population genetic data.
 
 
-\section*{The \texttt{Frequencies} Class}
+\section{The \texttt{Frequencies} Class}
 
-The \texttt{Frequencies} class was designed to help out with allele frequency issues and provide a single interface from which you can extract frequency-related information.  At its most basic level, a new \texttt{Frequencies} object is created from a list of \texttt{Locus} objects.  
+The \texttt{Frequencies} class was designed to help out with allele frequency issues and provide a single interface from which you can extract frequency-related information.  At its most basic level, a new \texttt{Frequencies} object is created from a list of \texttt{Locus} \index{Locus} objects.  
 
 <<>>=
 require(gstudio)
@@ -39,7 +18,7 @@ freqs <- Frequencies( c( loc1, loc2, loc3) )
 freqs
 @
 
-Estimates of allele frequencies can be extracted from the \texttt{Frequencies} class using the \texttt{get.frequencies} method.  This method needs to have the object and an optional list of alleles you are interested in getting frequencies for.  If you do not pass the second parameter, it will give you the frequencies for all the alleles it currently has.  If you do, it will give you the observed frequency of each (notice the value for the '42' allele)
+Estimates of allele frequencies can be extracted from the \texttt{Frequencies} \index{Frequencies} class using the \texttt{get.frequencies} method.  This method needs to have the object and an optional list of alleles you are interested in getting frequencies for.  If you do not pass the second parameter, it will give you the frequencies for all the alleles it currently has.  If you do, it will give you the observed frequency of each (notice the value for the '42' allele)
 
 <<>>=
 names(freqs)
@@ -49,10 +28,9 @@ get.frequencies( freqs, c("1","42") )
 @
 
 
+\section{Heterozygosities}
 
-\section*{Heterozygosities}
-
-A fundamental component of many population genetic analysis is the estimation of heterozygosity.  There are two basic types of heterozygosity, that which is expected under Hardy-Weinberg Equilibrium and that which was observed.  For simplicity, these are denoted as $H_{e}$ and $H_{o}$ in many common texts.
+A fundamental component of many population genetic analysis is the estimation of heterozygosity.\index{heterozygosity}  There are two basic types of heterozygosity, that which is expected under Hardy-Weinberg Equilibrium and that which was observed.  For simplicity, these are denoted as $H_{e}$ and $H_{o}$ in many common texts.
 
 Observed heterozygosity is probably the simplest of the two and it is simply the fraction of genotypes in the group you are looking at (could be a population or a region or a site) that are heterozygotes.  In terms of the \texttt{Locus} class, the function \texttt{is.heterozygote} returns \texttt{TRUE} if the locus has at least two alleles (allowing for ploidy levels in excess of 2) and at least two different alleles are present.  As part of the data accumulation process in the construction of an \texttt{AlleleFrequency} object, observed heterozygosity is recorded.
 
@@ -64,7 +42,7 @@ Expected heterozygosity requires an assumption of equilibrium (in the most simpl
 	BB & \to &  p_B^2
 \end{eqnarray*}
 
-From the example set of loci we used above, the observed and expected frequencies are:
+From the example set of loci we used above, the observed and expected frequencies are:\index{heterozygosity!observed}\index{heterozygosity!expected}
 
 <<>>=
 ho( freqs )
@@ -73,7 +51,7 @@ he( freqs )
 
 
 
-\section*{Allele Frequencies}
+\section{Allele Frequencies}
 
 
 The estimation of allele frequencies for a single site or population is probably one of the least informative summary approaches available.  It is the differences among sites \& populations and the various evolutionary and demographic processes that create these differences that are often of interest.
@@ -82,9 +60,9 @@ There are several helper functions and methods that can be used to examine allel
 
 
 
-\subsection*{Getting Frequencies from Populations}
+\subsection{Getting Frequencies from Populations}
 
-The \texttt{Population} class has a method for returning an \texttt{AlleleFrequency} object for a particular locus.  This is mostly a convenience method that goes through all the \texttt{Indiviudal} objects in the \texttt{Population} and creates a new \texttt{AlleleFrequency} object for you.  As a single population you can grab it using the \texttt{allele.frequencies} routine.
+The \texttt{Population} class \index{Population} has a method for returning an \texttt{AlleleFrequency} object for a particular locus.  This is mostly a convenience method that goes through all the \texttt{Indiviudal} objects in the \texttt{Population} and creates a new \texttt{AlleleFrequency} object for you.  As a single population you can grab it using the \texttt{allele.frequencies} routine.
 
 <<>>=
 data(araptus_attenuatus)
@@ -99,7 +77,7 @@ all.freqs <- allele.frequencies(araptus_attenuatus)
 print(all.freqs[1:2])
 @
 
-With the \texttt{partition} method, you can take the entire data set and easily find allele frequencies for subsets of data.
+With the \texttt{partition} method\index{partition}, you can take the entire data set and easily find allele frequencies for subsets of data.
 
 <<>>=
 clades <- partition(araptus_attenuatus,"Species")
@@ -112,7 +90,7 @@ allele.frequencies( araptus_attenuatus[ araptus_attenuatus$Lat > 26.3 ,], loci="
 @
 
 
-\subsection*{Plotting Frequencies}
+\subsection{Plotting Frequencies}
 
 The combination of \texttt{Population} and \texttt{Frequencies} can easily be used to explore population structure.  In the next snippet, we partition the dataset into populations along the Baja Peninsula and plot their locations (n.b., the \texttt{bty} option to plot removes the box around the image and the \texttt{asp} makes the axes equal).
 
@@ -133,10 +111,9 @@ plot(pop.coords, bty="n", xlab="Longitude", ylab="Latitude",asp=1,cex=2*unlist(p
 
 \begin{figure}[bth]
 	\centering
-	\includegraphics{AlleleFrequencies-araptus_he}
+<<fig=T>>=
+<<araptus_he>>
+@
 	\caption{Heterozygosity of \emph{Araptus attenuatus} populations (depicted by symbol size) on the peninsula of Baja California.}
 	\label{fig:araptus_he}
 \end{figure}
-
-
-\end{document}

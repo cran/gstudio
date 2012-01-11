@@ -1,27 +1,6 @@
-%
-%  GStudio Documentation: untitled
-%
-%  Created by dyer on 2011-07-20.
-\documentclass[letterpaper]{article}
-\usepackage[margin=1in]{geometry}
-\usepackage{amsmath} % for better align*
-\usepackage{Sweave}
-\usepackage[parfill]{parskip}
-\usepackage{color}
+\chapter{Population Graphs}
 
-
-\title{Population Graphs}
-\author{Rodney J. Dyer\\\small Department of Biology\\\small Virginia Commonwealth University\\\footnotesize http://dyerlab.bio.vcu.edu}
-\date{}
-
-
-%\VignetteIndexEntry{Population Graphs}
-
-
-\begin{document}
-\maketitle
-
-\section*{Synopsis}
+\section{Synopsis}
 
 A population graph is a topological representation of within and among population genetic variance first introduced by Dyer \& Nason (2004).  It is particularly well suited to characterizing how spatial genetic variation is distributed among sites.
 
@@ -31,7 +10,7 @@ data(araptus_attenuatus)
 baja <- araptus_attenuatus[araptus_attenuatus$Species != "CladeB",]
 @
 
-\section*{Simple Population Graphs}
+\section{Simple Population Graphs}
 
 
 
@@ -87,7 +66,7 @@ plot(graph.cladeC,layout=l,vertex.label=V(graph.cladeC)$name)
 From this plot, you can see even when we only focus on the true \texttt{CladeC} individuals, there is still partitioning of genetic covariance!  
 
 
-\section*{Node Position}
+\section{Node Position}
 
 Both node and edge position in the topology can easily be determined using common network analysis tools.  The \texttt{igraph} package has some as does the most excellent \texttt{sna} package.  Here is a quick example where the size of the node is depicting the node's betweeness (e.g., the number of shortest paths that go through that node).
 
@@ -103,7 +82,7 @@ cor.test(V(graph.cladeC)$size,pop.betweenness,method="spearman")
 @
 
 
-\section*{Conditional Genetic Distance}
+\section{Conditional Genetic Distance}
 
 In Dyer \emph{et al.} (2010) we showed that graph distance (e.g., the shortest path connecting points in the topology) was more powerful than pair-wise structure and distance approaches.  We denoted the among population distance as $cGD$ for conditional graph distance.
 
@@ -136,7 +115,7 @@ mantel(as.dist(D)~as.dist(P)) ##pval3 is Ho: Mantel-R=0
 The \texttt{pval3} is the probability of $H_O: Mantel\rho=0 $.  
 
 
-\section*{Graph Partitions}
+\section{Graph Partitions}
 
 A very important point needs to be made here regarding subgraphs and partitions of the whole data set.  The disconnected subgraph in the previous section is not necessarily the same graph you would get if you partitioned the genotypes into only those populations and then make the graph.  Compare the previous network topology to this one.
 
@@ -147,5 +126,3 @@ plot(tmp.graph,layout=med.layout,vertex.label=V(tmp.graph)$name)
 @
 
 This is because Population Graphs are constructed using \emph{Conditional Genetic Covariance}.  The genetic covariance between populations \texttt{173} \& \texttt{171} is conditional on the their covariance with all the other data in the data set.  In the first graph this includes the populations in this subgraph as well as the populations outside the subgraph.  
-
-\end{document}
