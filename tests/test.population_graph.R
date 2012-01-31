@@ -1,5 +1,5 @@
 test.popgraph <- function() {
-	
+	load("../data/araptus_attenuatus.rda")
 	baja <- araptus_attenuatus[araptus_attenuatus$Species!="CladeB",]
 	
 	graph <- population.graph(baja,"Pop")

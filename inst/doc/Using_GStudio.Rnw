@@ -1,0 +1,10 @@
+% \VignetteIndexEntry{Using_GStudio} 
+% \VignetteKeywords{genetic markers spatial analysis} 
+% \VignettePackage{gstudio} 
+
+\documentclass[letterpaper]{article} 
+\usepackage{hyperref} 
+\usepackage{pdfpages} 
+\begin{document} 
+\includepdf[fitpaper=true,pages=-]{gstudio.pdf} 
+\end{document} 

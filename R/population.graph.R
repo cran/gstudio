@@ -41,6 +41,9 @@ population.graph <- function( 	pop,
 		stop("You need to specify a stratum to partition your data on.")
 	if( missing(loci) || is.null(loci) )
 		loci <- column.names(pop,"Locus")
+	opts <- options()
+	options(warn=-1)
+	
 	cat("tranforming data... ")
 	genos <- multivariate.loci( pop, loci, ploidy=2 )
 	cat("done\n")
@@ -61,7 +64,7 @@ population.graph <- function( 	pop,
 	means <- colMeans(fit1$means)
 	LDValues <- scale( genos, center=means, scale=FALSE ) %*% fit1$scaling
 	allLD <- by(LDValues,pops,mean)
-	allSD <-  by(LDValues,pops,sd)
+	allSD <- by(LDValues,pops,sd)
 	
 	for(i in seq(1,npop)) 
 		for(j in seq(1,npop)){
@@ -89,7 +92,7 @@ population.graph <- function( 	pop,
 	cat("done\n")
 
 	cat("Making graph... ")
-	graph <- graph.adjacency(D,mode="undirected",weight=TRUE,diag=FALSE)
+	graph <- graph.adjacency(D,mode="undirected",weighted=TRUE,diag=FALSE)
 	popnames <- names(allSD)
 	cat("done\n")
 	V(graph)$name <- popnames
@@ -122,7 +125,7 @@ population.graph <- function( 	pop,
 		colors <- cols[as.numeric(grps)]
 	}
 	V(graph)$color <- colors
-	
+	options( warn=opts$warn )
  	return(graph)
 };
 

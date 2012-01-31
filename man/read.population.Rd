@@ -3,8 +3,8 @@
 \title{Loads a population from a *.csv file}
 \usage{
   read.population(file = NULL, googleURL = NULL,
-    num.haploid = 0, header = TRUE, sep = ",",
-    split = NULL)
+    num.single.digit = 0, as.snp.minor = FALSE,
+    header = TRUE, sep = ",", split = NULL)
 }
 \arguments{
   \item{file}{The path to the data file, this can be
@@ -13,9 +13,15 @@
 
   \item{googleURL}{The URL to the shared spreadsheet}
 
-  \item{num.haploid}{The number of that are haploid (or
-  binary).  These will be loaded as the right most
-  \code{num.haploid} number of columns.}
+  \item{num.single.digit}{The number of loci that are
+  represented by a single characer.  These will be loaded
+  as the right most \code{num.single.digit} number of
+  columns of data.  This is for haploid, dominant, and
+  signle digit snp encoding (see also \code{Locus} object
+  for snp encoding).}
+
+  \item{as.snp.minor}{A flag to change SNP minor allele
+  encoding 0/1/2 to normal "A" and "B" alleles.}
 
   \item{header}{A logical value indicating that the first
   line is column labels (defaults to TRUE).}

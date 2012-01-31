@@ -9,6 +9,15 @@ UPCOMING:
 - [ADD] add drop.one option to multivariate.loci option
 - [ADD] stamova
 
+2012-01-23 Rodney J. Dyer <rjdyer@vcu.edu> version = 0.8
+- [FIX] Added .Rinstignore to clean up inst/doc directory
+- [NOFIX] tried compactPDF() but nothing.
+
+2012-01-23 Rodney J. Dyer <rjdyer@vcu.edu> version = 0.7
+- [ADD] ability to create Locus() objects from SNP 0/1/2 minor allele encodings
+- [ADD] flag in read.population() for snp 0/1/2 minor allele encodings
+- [FIX] vignette problem (for some reason it is not being built in the previous versions) finally there now.
+
 2012-01-11 Rodney J. Dyer <rjdyer@vcu.edu> version = 0.6
 - [CHANGE] Moved all the separate vignettes into a single document
 

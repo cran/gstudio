@@ -1,5 +1,5 @@
 test.congruence.probability <- function() {
-	
+	require(igraph)
 	A <- matrix(0,nrow=4,ncol=4)
 	A[1,2] <- A[2,1] <- A[1,3] <- A[3,1] <- A[4,1] <- A[1,4] <- A[2,4] <- A[4,2] <- 1
 	B <- matrix(0,nrow=4,ncol=4)

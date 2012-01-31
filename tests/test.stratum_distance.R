@@ -1,4 +1,5 @@
 test.stratum.distance <- function() {
+	load("../data/araptus_attenuatus.rda")
 	sonora <- araptus_attenuatus[araptus_attenuatus$Species=="CladeB",]
 	P <- stratum.distance(sonora,"Pop",lat="Lat",lon="Long")
 	
@@ -16,7 +17,8 @@ test.stratum.distance <- function() {
 }
 
 
-test.stratum.distance.subset <- function() { 
+test.stratum.distance.subset <- function() {
+	load("../data/araptus_attenuatus.rda")
 	sonora <- araptus_attenuatus[araptus_attenuatus$Species=="CladeB",]
 
 	P <- stratum.distance(sonora,"Pop",lat="Lat",lon="Long",subset=c("101","102") )

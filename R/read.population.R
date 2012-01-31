@@ -12,8 +12,12 @@
 #' @param file The path to the data file, this can be optional if you are 
 #'	loading a file from a google spreadsheet (see \code{googleURL} below).
 #' @param googleURL The URL to the shared spreadsheet 
-#' @param num.haploid The number of that are haploid (or binary).  These will 
-#'	be loaded as the right most \code{num.haploid} number of columns.
+#' @param num.single.digit The number of loci that are represented by a single 
+#'	characer.  These will be loaded as the right most \code{num.single.digit} 
+#'	number of columns of data.  This is for haploid, dominant, and signle 
+#'	digit snp encoding (see also \code{Locus} object for snp encoding).
+#' @param as.snp.minor A flag to change SNP minor allele encoding 0/1/2 to 
+#'	normal "A" and "B" alleles.
 #' @param header A logical value indicating that the first line is column 
 #'	labels (defaults to TRUE).
 #' @param sep The character that separates columns in your data set 
@@ -35,7 +39,8 @@
 #' @export
 read.population <- function( 	file=NULL, 
 								googleURL=NULL,
-								num.haploid=0, 
+								num.single.digit=0,
+								as.snp.minor=FALSE, 
 								header=TRUE, 
 								sep=",",
 								split=NULL) {
@@ -59,22 +64,23 @@ read.population <- function( 	file=NULL,
 		df <- read.table(file=file,header=header,sep=sep)
 	}
 	else {
-		
+		stop("File was null")
 	}
 	
 	thePop <- Population()
 	nCols <- dim(df)[2]
 	labels <- names(df)
+	cat("Loading Data Columns: ")
 	for( i in 1:nCols ){
 		data <- df[,i]
-		
+		cat(".",sep="")
 		if( !missing(split) && !is.null(split) && (i %in% split) ) {
 			data <- as.character(data)
 			cat("Column",i,"is being split for old style locus\n")
 			splitGeno <- function(geno) {
 				if( is.na(geno) ) return(Locus())
 				nc <- nchar(geno)/2
-				return( Locus( c(substring(geno,1,nc),substring(geno,nc+1) )) )
+				return( Locus( c(substring(geno,1,nc),substring(geno,nc+1) ), ) )
 			}
 			thePop[,i] <- unlist( lapply(data, function(x) splitGeno(x) ))
 		}
@@ -83,8 +89,8 @@ read.population <- function( 	file=NULL,
 		else {
 			
 			# a haploid column of data
-			if( num.haploid && i >= (nCols-num.haploid) )
-				thePop[,i] <- unlist(lapply(as.character(data),Locus))
+			if( num.single.digit && i >= (nCols-num.single.digit) )
+				thePop[,i] <- unlist(lapply(as.character(data), function(x) Locus(x,as.snp.minor=as.snp.minor)))
 			else {
 				# levels have something with a colon in it
 				alleles <- unlist(lapply(as.character(data), 
@@ -97,6 +103,7 @@ read.population <- function( 	file=NULL,
 			}
 			
 		}
+		cat("\n")
 	}
 	names(thePop@values) <- labels
 

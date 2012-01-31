@@ -52,7 +52,9 @@ setClass("Locus",
 #' @param alleles A vector of objects that can be turned into \code{character}
 #' @param phased A logical flag indicating that the order of the alleles is 
 #'	important (default FALSE) such that loc1 != loc2 for loc1=1:2 and loc2=2:1
-#'	By default, the alleles are sorted ascending.+
+#'	By default, the alleles are sorted ascending.
+#' @param as.snp.minor A logical flag, that if true genotypes are encoded as 
+#'	0/1/2 for the number of 'minor' alleles at a snp locus.
 #' @return A fully formed \code{\linkS4class{Locus}} object.
 #' @note Missing data can be encoded as either '-9' or 'NA'.  If there is a 
 #'	single missing allele at the locus, then the entire locus will be 
@@ -69,7 +71,7 @@ setClass("Locus",
 #' loc <- Locus( c("A","T"))
 #'
 
-Locus <- function( alleles=character(0), phased=FALSE ) {
+Locus <- function( alleles=character(0), phased=FALSE, as.snp.minor=FALSE ) {
 	if( missing(alleles)) alleles <- character(0)
 	else if( !length(alleles)) alleles <- character(0)
 	else if( "-9" %in% alleles ) 
@@ -77,6 +79,11 @@ Locus <- function( alleles=character(0), phased=FALSE ) {
 	else if( "NA" %in% alleles ) alleles <- character(0)
 	else if( "na" %in% alleles ) alleles <- character(0)
 	if( class(alleles) != "character") alleles <- as.character(alleles) 
+	if( as.snp.minor ){
+		if( alleles == "0" ) alleles <- c("A","A")
+		else if( alleles == "1") alleles <- c("A","B")
+		else alleles <- c("B","B")
+	}
 	if( !phased )
 		alleles <- sort(alleles)
 	new("Locus",alleles=alleles )

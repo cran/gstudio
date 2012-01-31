@@ -1,4 +1,5 @@
 test.genetic.diversity <- function() {
+	load("../data/araptus_attenuatus.rda")
 	baja <- araptus_attenuatus[araptus_attenuatus$Species=="CladeC",]
 	gdiv <- genetic.diversity(baja,stratum="Cluster",loci="MP20",mode="A95")
 	
