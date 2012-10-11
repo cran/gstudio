@@ -1,30 +1,63 @@
-\name{Frequencies}
-\alias{Frequencies}
-\title{Constructor function for \code{\linkS4class{Frequencies}} objects}
+\name{frequencies}
+\alias{frequencies}
+\alias{frequencies.data.frame}
+\alias{frequencies.default}
+\alias{frequencies.locus}
+\title{Get allele frequencies}
 \usage{
-  Frequencies(loci = list())
+  frequencies(x, loci, stratum, ...)
+
+  \method{frequencies}{default} (x, ...)
+
+  \method{frequencies}{locus} (x, loci, ...)
+
+  \method{frequencies}{data.frame} (x, loci, stratum, ...)
 }
 \arguments{
-  \item{loci}{A list of \code{Locus} objects.  Can be
-  empty}
+  \item{x}{Either a vector of types \code{locus} or a
+  \code{data.frame} containing \code{locus} objects.}
+
+  \item{loci}{The loci to get frquencies from (default is
+  all).}
+
+  \item{stratum}{Partition of the data based upon this
+  stratum (default is no partitions).}
+
+  \item{...}{Ignored}
 }
 \value{
-  A fully formed \code{\linkS4class{Frequencies}} object.
+  A data frame with Frequencies, Alleles, Loci, and perhaps
+  Stratum columns (Allele and Frquencies are at a
+  minimium).
+
+  A data frame with Frequencies, Alleles, Loci, and perhaps
+  Stratum columns (Allele and Frquencies are at a
+  minimium).
+
+  A data frame with Frequencies, Alleles, Loci, and perhaps
+  Stratum columns (Allele and Frquencies are at a
+  minimium).
+
+  A data frame with Frequencies, Alleles, Loci, and perhaps
+  Stratum columns (Allele and Frquencies are at a
+  minimium).
 }
 \description{
-  This function will not sort the alleles but will keep
-  them in normal order
+  This function converts loci into data frames consisting
+  of alleles, stratum, frequencies, etc.
 }
 \examples{
-loci <- list( Locus(c(1,1)), Locus(c(1,1)), Locus(c(1,2)), Locus(c(2,2)) )
-freqs <- Frequencies( loci )
-freqs
+AA <- locus( c("A","A") )
+AB <- locus( c("A","B") )
+BB <- locus( c("B","B") )
+loc1 <- c(AA,AB,AB,AA,BB)
+frequencies(loc1)
+loc2 <- c(BB,BB,AB,AA,BB)
+df <- data.frame(Population=c(rep("A",3), rep("B",2)), TPI=loc1, PGM=loc2)
+frequencies(df)
+frequencies(df,stratum="Population")
 }
 \author{
-  Rodney J. Dyer <rjdyer@vcu.edu>
-}
-\seealso{
-  \code{\linkS4class{Locus}},
-  \code{\linkS4class{Population}}
+  Rodney J. Dyer \email{rjdyer@vcu.edu}
 }
 

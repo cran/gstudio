@@ -1,129 +1,87 @@
-##############################################################################
-# 							    paternity                            
-#                                                                             
-# 						    R.J. Dyer <rjdyer@@vcu.edu>                        
-#                                                                             
-##############################################################################
-
-#' Performs paternity exclusion using Fractional analysis
+#' Estimates fractional paternity probability
 #'
-#' Simple function that estimates basic paternity exclusion for a family array
-#'	using fractional paternity from \code{transition.probability}
-#'
-#' @param pop A population that has all the individuals.
-#' @param familyID The IndID for the family (see notes).
-#' @param indCol Heading for IndID column in \code{Population} (see note)
-#' @param offCol Heading for OffID column in \code{Population} (see note)
-#' @return A \code{paternity} object.
-#' @note The form of a mixed offspring/parent \code{Population} has to have at 
-#'	least the following.  All adults must have a unique ID number that will 
-#'	be indexed by the argument indCol (default='IndID').  Offspring for a particular
-#'	maternal individual all have the same indCol, that of the mother.  A second
-#'	identification column is also required, indexed by offCol (default='OffID'), that
-#'	is used to differentiate among half-sibs within a maternal offspring array.  Mothers
-#'	must have OffID=0 and all of her offspring will have a non-zero value for this.
-#'	This approach allow you to have all your data kept in a single \code{Population}.
-#' @seealso \code{offspring.array}, \code{transition.probability}
-#' @author Rodney J. Dyer <rjdyer@@vcu.edu>
+#' This function estimates fractional paternity for offspring
+#'  given a set of potential fathers.
+#' @param offspring A particular offspring. Often as a row
+#'  from a \code{data.frame} with columns as loci and other 
+#'  meta data.
+#' @param mother The assumed mother of the offspring as a row
+#'  from a \code{data.frame} with columns as loci and other 
+#'  meta data.
+#' @param fathers A \code{data.frame} of potential fathers.
+#' @param ID The name of the column where the dad's adult ID column
+#'  is found in the \code{data.frame} of potential fathers.
+#' @param OffID The name of the column where the offspring ID is 
+#'  located.  All offspring from a maternal individual should have
+#'  have the same maternal \code{ID} to indicate which mother they
+#'  are from but must also have a unique offspring ID.
+#' @return A \code{data.frame} with indications of paternity by row.  Columns 
+#'  will include ID, OffID, DadID, and potentially Fij.
 #' @export
+#' @author Rodney J. Dyer \email{rjdyer@@vcu.edu}
 #' @examples
-#'  
-#' data(cornus_florida)
-#' f <- paternity( cornus_florida, familyID=474)
-#' print(f)
-#'
-paternity <- function( pop, familyID=NULL, indCol="IndID", offCol="OffID" ) {
-	
-	if( !is(pop,"Population") )
-		stop("Must pass a population to this function.")
-	if( is.null(familyID) )
-		stop("You must specify a family id for this anlaysis.")
-		
-	o <- offspring.array(pop,familyID,indCol,offCol)
-	if( !length(o$mom) )
-		stop("You need to have a mother to do the paternity exclusion.")
-	if( !length( o$offspring ) )
-		stop("You need to have offspring for that family to do paternity exclusion...")
-	
-	dads <- pop[ pop[[offCol]]==0, ]
+#' freqs <- c(0.55, 0.30, 0.15, 0.34, 0.34, 0.32)
+#' loci <- c(rep("TPI",3), rep("PGM",3))
+#' alleles <- c(LETTERS[1:3],LETTERS[8:10])
+#' f <- data.frame(Locus=loci, Allele=alleles, Frequency=freqs)
+#' adults <- make_population(f,N=20)
+#' adults
+#' offs <- mate( adults[1,], adults[2,], N=10)
+#' offs
+#' paternity( offs, adults[1,], adults )
+paternity <- function( offspring, mother, fathers, ID="ID", OffID="OffID"){
 
-	nDads <- dim(dads)[1]
-	nOff <- dim(o$offspring)[1]
-	locusCols <- column.class(dads,"Locus")
-	
-	ret <- list( mom=familyID, numOff=nOff, paternity=list() )
-	
-
-	# go through the offspring
-	for( i in 1:nOff ){
-		off <- o$offspring[i,]
-		lambda <- rep(0,nDads)
-		names(lambda) <- dads[, which(names(pop)==indCol) ]
-
-		# go through the dads
-		for(j in 1:nDads){
-			p <- 1.0
-			
-			# go through the loci
-			for(k in locusCols){
-				t <- transition.probability(o$mom[1,k], off[1,k], dads[j,k])
-				if( t > 0 )
-					p <- p * t
-				else {
-					p <- 0.0
-					break;
-				}
-			}
-			lambda[j] <- p
-		}
-		lambda <- lambda[lambda>0]
-
-		if( length(lambda) ) {
-			offKey <- as.character(off[[offCol]])
-			frac <- lambda/sum(lambda)
-			ret$paternity[[offKey]] <- frac
-		}
-	}
-	
-	class(ret) <- "paternity"
-	return(ret)
+  if( missing(offspring) | missing(mother) | missing(fathers) )
+    stop("you need to pass offspring, mother, and putative fathers to paternity()")
+  
+  if( !(ID %in% names(offspring)) | !(ID %in% names(mother)) | !(ID %in% names(fathers)))
+    stop("You need to have an ID column in offspring, mother, and putative father data sets.")
+  
+  
+  
+  locus_names <- column_class(offspring,"locus")
+  if( !(all( locus_names == column_class(mother,"locus"))))
+    stop("You need to have the same loci in both mother and offspring for paternity() to work.")
+  if( !(all( locus_names == column_class(fathers,"locus"))))
+    stop("You need to have the same loci in both potential dads and offspring for paternity() to work.")
+  
+  
+  K <- dim(offspring)[1]
+  N <- length(fathers[[ID]])
+  ret <- data.frame()
+  
+  # TODO iterate across offspring
+  for( off in 1:K) {
+    
+    oret <- data.frame(MomID=mother[[ID]], OffID=offspring[off,][[OffID]], DadID=fathers[[ID]],  Fij=0)
+    
+    for( i in 1:N) {
+      fij <- NA
+      
+      for( locus in locus_names){
+        o <- offspring[off,][[locus]]
+        m <-mother[[locus]]
+        f <- fathers[i,][[locus]]
+        
+        if( !is.na(o) & !is.na(m) & !is.na(f) ) {
+          r <- transition_probability(o,m,f)
+          if( !is.na(fij) )
+            fij <- fij * r
+          else if( is.na(fij) & r>0)
+            fij <- r
+        }
+      }
+      oret$Fij[i] <- fij
+    }
+    
+    oret <- oret[ !is.na(oret$Fij),]
+    oret$Fij <- oret$Fij/ sum(oret$Fij, na.rm=TRUE)
+    oret <- oret[ oret$Fij>0 , ]
+    ret <- rbind( ret, oret )
+  }
+  
+  rownames(ret) <- 1:length(rownames(ret))
+  
+  return(ret)
 }
-
-#' Print paternity object
-#'
-#' Overload function for printing out a paternity result for a single family
-#' @param x An object of type class(x) = "paternity"
-#' @param ... Ignored
-#' @author Rodney J. Dyer <rjdyer@@vcu.edu>
-#' @method print paternity
-#' @export
-#'
-print.paternity <- function( x, ... ){
-	ret <- "Paternity Analysis:\n"
-	ret <- paste(ret," Family ID:", x$mom,"\n")
-	ret <- paste(ret," Number of Offspring:", x$numOff,"\n")
-	offs <- x$paternity
-	offKeys <- sort(names(offs))
-	
-	ret <- paste(ret," Offspring Assigned Paternity:",length(offKeys),"\n")
-	if( length(offKeys) > 0 ) {
-		ret <- paste(ret," Fractional Paternity (off: dad(prob) ):\n")
-		for( i in 1:length(offKeys) ) {
-			ret <- paste(ret,"    ",offKeys[i],":",sep="")
-			f <- offs[[offKeys[i]]]
-			n <- names(f)
-			for(j in 1:length(f))
-				ret <- paste(ret, n[j],"(",f[j],") ",sep="")
-			ret <- paste(ret,"\n")
-		}	
-	}
-	cat(ret)
-	invisible(x)
-}
-
-
-
-
-
-
 

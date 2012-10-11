@@ -1,49 +1,122 @@
-#' An example data set for co-dominant loci
-#'
-#' This data set was published in Garrick et al. (2012) and consists of four
-#'	strata, two coordinates, and eight co-dominant loci.
-#'
-#' @name araptus_attenuatus
-#' @docType data
-#' @author Rodney J. Dyer <rjdyer@@vcu.edu>
-#' @keywords data
-NULL
+#############################################
+#        _                 _       _        #
+#     __| |_   _  ___ _ __| | __ _| |__     #
+#    / _` | | | |/ _ \ '__| |/ _` | '_ \    #
+#   | (_| | |_| |  __/ |  | | (_| | |_) |   #
+#    \__,_|\__, |\___|_|  |_|\__,_|_.__/    #
+#          |___/                            #
+#                                           #
+#############################################
 
-#' An example data set for parent offspring data
-#'
-#' This data set was published in Dyer et al. (2012) and consists of 22 adult
-#'	and 41 offspring from two mothers.  Genotypes are assayed for 
-#'
-#' @name cornus_florida
-#' @docType data
-#' @author Rodney J. Dyer <rjdyer@@vcu.edu>
-#' @keywords data
-NULL
-
-#' Spatial analysis of genetic marker data
+#' Routines used in spatial analysis of genetic marker data
 #' 
-#' gstudio is a suite of classes and functions for the spatial analysis
-#' 	of genetic marker data. 
+#' gstudio is a suite of tools used in the spatial analysis
+#'  of population genetic data created for the book 
+#'  "Applied Landscape Genetics" by R.J. Dyer.   This version
+#'  of the package (1.X) is a significant deviant from the 
+#'  previous (versions 0.X) resulting from an entire re-write
+#'  of the package to maximize ease of use and algorithm quickness.
+#'  As such, previous scripts using gstudio (vers. 0.X) will need
+#'  to be refactored a bit.  While this can be a bit of a pain, the
+#'  larger utility of the new format will pay off in spades.
 #'
 #' \tabular{ll}{
 #' Package: \tab gstudio\cr
 #' Type: \tab Package\cr
-#' Version: \tab 0.1\cr
-#' Date: \tab 2011-08-11\cr
+#' Version: \tab 1.0\cr
+#' Date: \tab 2013-02-28\cr
 #' License: \tab GPL (>= 2)\cr
 #' LazyLoad: \tab yes\cr
 #' }
 #'
-#' There are some very good examples of how \code{Locus} and \code{Population} 
-#'	classes are used along with \code{population.graph} approaches located in 
-#'	the vignettes; \file{DataImport.pdf}, \file{GeneticSummaries.pdf}, 
-#'	\file{GeneticDistance.pdf}, \file{GeneticStructure}, and
-#'	\file{PopulationGraph.pdf}.
-#' @author Rodney J. Dyer <rjdyer@@vcu.edu>
+#' There are some very good examples of the components of this package are used
+#'	in the vignettes for this package.
+#' @author Rodney J. Dyer \email{rjdyer@@vcu.edu}
 #' @docType package
 #' @keywords package
+#' @import raster ggplot2 
 #' @name gstudio-package
 #' @rdname gstudio-package
 #'
 NULL
+
+#' Data for Araptus attenuatus
+#' 
+#' This is a EPIC genetic dataset for the Sonoran desert
+#'  beetle Araptus attenuatus
+#' @name arapat
+#' @docType data
+#' @keywords data
+NULL
+
+
+#' AFLP example data set
+#' 
+#' This is an example of the AFLP data input types.
+#' @name data_aflp
+#' @docType data
+#' @keywords data
+NULL
+
+
+
+#' Two Column Example Data
+#' 
+#' Example data for 2-column data types
+#' @name data_2_column
+#' @docType data
+#' @keywords data
+NULL
+
+
+
+#' Separated Example Data
+#' 
+#' Example data for separated data types
+#' @name data_separated
+#' @docType data
+#' @keywords data
+NULL
+
+
+#' SNP Example Data
+#' 
+#' Example data for SNP data types
+#' @name data_snp
+#' @docType data
+#' @keywords data
+NULL
+
+
+#' Zyme-like Example Data
+#' 
+#' Example data like zyme genotypes
+#' @name data_zymelike
+#' @docType data
+#' @keywords data
+NULL
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

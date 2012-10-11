@@ -1,52 +1,52 @@
 \name{paternity}
 \alias{paternity}
-\title{Performs paternity exclusion using Fractional analysis}
+\title{Estimates fractional paternity probability}
 \usage{
-  paternity(pop, familyID = NULL, indCol = "IndID",
-    offCol = "OffID")
+  paternity(offspring, mother, fathers, ID = "ID",
+    OffID = "OffID")
 }
 \arguments{
-  \item{pop}{A population that has all the individuals.}
+  \item{offspring}{A particular offspring. Often as a row
+  from a \code{data.frame} with columns as loci and other
+  meta data.}
 
-  \item{familyID}{The IndID for the family (see notes).}
+  \item{mother}{The assumed mother of the offspring as a
+  row from a \code{data.frame} with columns as loci and
+  other meta data.}
 
-  \item{indCol}{Heading for IndID column in
-  \code{Population} (see note)}
+  \item{fathers}{A \code{data.frame} of potential fathers.}
 
-  \item{offCol}{Heading for OffID column in
-  \code{Population} (see note)}
+  \item{ID}{The name of the column where the dad's adult ID
+  column is found in the \code{data.frame} of potential
+  fathers.}
+
+  \item{OffID}{The name of the column where the offspring
+  ID is located.  All offspring from a maternal individual
+  should have have the same maternal \code{ID} to indicate
+  which mother they are from but must also have a unique
+  offspring ID.}
 }
 \value{
-  A \code{paternity} object.
+  A \code{data.frame} with indications of paternity by row.
+  Columns will include ID, OffID, DadID, and potentially
+  Fij.
 }
 \description{
-  Simple function that estimates basic paternity exclusion
-  for a family array using fractional paternity from
-  \code{transition.probability}
-}
-\note{
-  The form of a mixed offspring/parent \code{Population}
-  has to have at least the following.  All adults must have
-  a unique ID number that will be indexed by the argument
-  indCol (default='IndID').  Offspring for a particular
-  maternal individual all have the same indCol, that of the
-  mother.  A second identification column is also required,
-  indexed by offCol (default='OffID'), that is used to
-  differentiate among half-sibs within a maternal offspring
-  array.  Mothers must have OffID=0 and all of her
-  offspring will have a non-zero value for this.  This
-  approach allow you to have all your data kept in a single
-  \code{Population}.
+  This function estimates fractional paternity for
+  offspring given a set of potential fathers.
 }
 \examples{
-data(cornus_florida)
-f <- paternity( cornus_florida, familyID=474)
-print(f)
+freqs <- c(0.55, 0.30, 0.15, 0.34, 0.34, 0.32)
+loci <- c(rep("TPI",3), rep("PGM",3))
+alleles <- c(LETTERS[1:3],LETTERS[8:10])
+f <- data.frame(Locus=loci, Allele=alleles, Frequency=freqs)
+adults <- make_population(f,N=20)
+adults
+offs <- mate( adults[1,], adults[2,], N=10)
+offs
+paternity( offs, adults[1,], adults )
 }
 \author{
-  Rodney J. Dyer <rjdyer@vcu.edu>
-}
-\seealso{
-  \code{offspring.array}, \code{transition.probability}
+  Rodney J. Dyer \email{rjdyer@vcu.edu}
 }
 

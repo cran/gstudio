@@ -1,51 +1,51 @@
-\name{Locus}
-\alias{Locus}
-\title{Constructor function for \code{\linkS4class{Locus}} objects}
+\name{locus}
+\alias{locus}
+\title{General constructor for locus object}
 \usage{
-  Locus(alleles = character(0), phased = FALSE,
-    as.snp.minor = FALSE)
+  locus(x, type, phased = FALSE)
 }
 \arguments{
-  \item{alleles}{A vector of objects that can be turned
-  into \code{character}}
+  \item{x}{The data to be turned into a \code{locus}
+  object}
 
-  \item{phased}{A logical flag indicating that the order of
-  the alleles is important (default FALSE) such that loc1
-  != loc2 for loc1=1:2 and loc2=2:1 By default, the alleles
-  are sorted ascending.}
+  \item{type}{An indication of what kind of data it is.  By
+  default this parameter is missing and this will cause the
+  function to assume that every element of x is an allele
+  in the genotype.  \itemize{ \item{blank}{Default value,
+  uses all passed items as alleles} \item{aflp}{Encoded as
+  0,1 for absence/presence of bands.} \item{column}{Two
+  columns of alleles} \item{separated}{Pre-separated
+  alleles (with ':').} \item{snp}{Encoded by the number of
+  minor alleles at the locus.} \item{zyme}{Alleles like
+  zymes (e.g., 12 for '1' and '2' alleles).} }}
 
-  \item{as.snp.minor}{A logical flag, that if true
-  genotypes are encoded as 0/1/2 for the number of 'minor'
-  alleles at a snp locus.}
+  \item{phased}{A flag indicating the the alleles should
+  are of known gametic phase (default=FALSE).}
 }
 \value{
-  A fully formed \code{\linkS4class{Locus}} object.
+  Either a single or vector of objects of type
+  \code{locus}.
 }
 \description{
-  Locus class description
-}
-\details{
-  This function will not sort the alleles but will keep
-  them in normal order
-}
-\note{
-  Missing data can be encoded as either '-9' or 'NA'.  If
-  there is a single missing allele at the locus, then the
-  entire locus will be considered as missing.  If you are
-  mixing diploid and haploid individuals, encode the
-  haploids as only a single allele and do not try to put in
-  the extra allele as missing.
+  This function creates an object of type \code{locus}, a
+  fundamental type in the gstudio package.  Therea re
+  several kinds of loci that can be created.
 }
 \examples{
-loc <- Locus( 1:3 )
-loc <- Locus( c("A","T"))
+AA <- locus( c("A","A") )
+AB <- locus( c("A","B") )
+BB <- locus( c("B","B") )
+AC <- locus( c("A","C") )
+AD <- locus( c("A","D") )
+BC <- locus( c("B","C") )
+BD <- locus( c("B","D") )
+CC <- locus( c("C","C") )
+CD <- locus( c("C","D") )
+DD <- locus( c("D","D") )
+loci <- c(AA,AB,AC,AD,BB,BC,BD,CC,CD,DD)
+loci
 }
 \author{
-  Rodney J. Dyer <rjdyer@vcu.edu>
-
-  Rodney J. Dyer <rjdyer@vcu.edu>
-}
-\seealso{
-  \code{\linkS4class{Locus}}
+  Rodney J. Dyer \email{rjdyer@vcu.edu}
 }
 
