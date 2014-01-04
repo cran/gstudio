@@ -20,14 +20,16 @@
 #' @export
 #' @author Rodney J. Dyer \email{rjdyer@@vcu.edu}
 #' @examples
-#' freqs <- c(0.55, 0.30, 0.15, 0.34, 0.34, 0.32)
-#' loci <- c(rep("TPI",3), rep("PGM",3))
-#' alleles <- c(LETTERS[1:3],LETTERS[8:10])
+#' freqs <- c(1/3,1/3,1/3)
+#' loci <- rep( paste("Loc",1:6,sep="-"), each=3)
+#' alleles <- LETTERS[1:3]
 #' f <- data.frame(Locus=loci, Allele=alleles, Frequency=freqs)
+#' f
 #' adults <- make_population(f,N=20)
 #' adults
 #' offs <- mate( adults[1,], adults[2,], N=10)
-#' offs
+#' offs$OffID <- offs$ID
+#' offs$MomID <- adults$ID[1]
 #' paternity( offs, adults[1,], adults )
 paternity <- function( offspring, mother, fathers, ID="ID", OffID="OffID"){
 
@@ -56,30 +58,26 @@ paternity <- function( offspring, mother, fathers, ID="ID", OffID="OffID"){
     oret <- data.frame(MomID=mother[[ID]], OffID=offspring[off,][[OffID]], DadID=fathers[[ID]],  Fij=0)
     
     for( i in 1:N) {
-      fij <- NA
+      fij <- list()
       
       for( locus in locus_names){
         o <- offspring[off,][[locus]]
         m <-mother[[locus]]
         f <- fathers[i,][[locus]]
         
-        if( !is.na(o) & !is.na(m) & !is.na(f) ) {
-          r <- transition_probability(o,m,f)
-          if( !is.na(fij) )
-            fij <- fij * r
-          else if( is.na(fij) & r>0)
-            fij <- r
-        }
+        if( !is.na(o) & !is.na(m) & !is.na(f) ) 
+          fij[[locus]] <- transition_probability(o,m,f)
+
       }
-      oret$Fij[i] <- fij
+      oret$Fij[i] <- prod(as.numeric(fij))
     }
-    
-    oret <- oret[ !is.na(oret$Fij),]
-    oret$Fij <- oret$Fij/ sum(oret$Fij, na.rm=TRUE)
+    if( sum(oret$Fij)>0)
+      oret$Fij <- oret$Fij/ sum( oret$Fij )
     oret <- oret[ oret$Fij>0 , ]
-    ret <- rbind( ret, oret )
+    if( dim(oret)[1]>0)
+      ret <- rbind( ret, oret )
   }
-  
+  ret <- ret[ order( ret[,1], ret[,2], -ret[,4]),]
   rownames(ret) <- 1:length(rownames(ret))
   
   return(ret)

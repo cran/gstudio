@@ -7,6 +7,8 @@ test_that("testing",{
   f <- data.frame(Locus=loci, Allele=alleles, Frequency=freqs)
   adults <- make_population(f,N=20)
   offs <- mate( adults[1,], adults[2,], N=10)
+  offs$OffID <- offs$ID
+  offs$MomID <- 1
   
   
   expect_that( adults, is_a("data.frame"))
@@ -24,6 +26,6 @@ test_that("testing",{
   expect_that( p, is_a("data.frame"))
   expect_that( dim(p)[1]>0, is_true() )
   expect_that( names(p), is_equivalent_to(c("MomID","OffID","DadID","Fij")))
-  expect_that( sum(p$Fij), equals(10) )
+  expect_that( sum(p$Fij, na.rm=TRUE), equals(10) )
   
 })

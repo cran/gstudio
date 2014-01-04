@@ -23,8 +23,8 @@
 #' \tabular{ll}{
 #' Package: \tab gstudio\cr
 #' Type: \tab Package\cr
-#' Version: \tab 1.0\cr
-#' Date: \tab 2013-02-28\cr
+#' Version: \tab 1.1\cr
+#' Date: \tab 2013-06-07\cr
 #' License: \tab GPL (>= 2)\cr
 #' LazyLoad: \tab yes\cr
 #' }

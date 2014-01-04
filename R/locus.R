@@ -7,7 +7,7 @@
 #' @param type An indication of what kind of data it is.  By default this
 #'  parameter is missing and this will cause the function to assume that 
 #'  every element of x is an allele in the genotype.
-#'  \itemize{
+#'  \describe{
 #'    \item{blank}{Default value, uses all passed items as alleles}
 #'    \item{aflp}{Encoded as 0,1 for absence/presence of bands.}
 #'    \item{column}{Two columns of alleles}
@@ -44,7 +44,7 @@ locus <- function( x, type, phased=FALSE ){
     ret <- as.character(x)
     if( any(nchar(ret))) {
       if( !phased )
-        ret <- sort(ret)
+        ret <- as.character(sort(x))
       ret <- paste(ret,collapse=":")
       if( ret == "NA:NA")
         ret <- ""
@@ -161,6 +161,8 @@ as.list.locus <- function( x, ... ) {
 #' as.locus( chr )
 #' 
 as.locus <- function( x ) {
+  if( inherits(x,"list"))
+    x <- unlist(x)
   return( locus(x) )
 }
 
@@ -280,9 +282,9 @@ is.locus <- function ( x ) {
 #' loci[2]
 #'
 `[.locus` <- function (x, i) {
-  y <- unclass(x)[i]
-  class(y) <- "locus"
-  y
+    y <- unclass(x)[i]
+    class(y) <- "locus"
+    return(y)  
 }
 
 
@@ -354,8 +356,22 @@ is.locus <- function ( x ) {
 #' dad.gamete
 #'
 `-.locus` <- function( e1, e2 ){
-  if( is.na(e1) || is.na(e2))
-    stop("Cannot subtract missing locus objects.")
+  
+  
+  if( length(e1) > 1 ){
+    ret <- locus()
+    for( i in 1:length(e1)){
+      ret <- c( ret, e1[i] - e2[i] )
+    }
+    return( ret[-1] )
+  }
+  
+  
+  if( is.na(e1) || is.na(e2)) {
+    warning("Subtract missing locus objects.  Nothing subtracted.")
+    return( e1 )
+  }
+    
   
   off <- alleles(e1)
   mom <- alleles(e2)
@@ -385,7 +401,7 @@ is.locus <- function ( x ) {
     
     # mother alleles not in offspring or not having half of the alleles
     if( length(int) == 0 ) {
-      warning(paste("Cannot subtract mom '",e2,"' from offspring '",e1,
+      message(paste("Unable to subtract adult '",e2,"' from offspring '",e1,
                     "', result is unreduced.",sep=""))
       return(e1)
     }  

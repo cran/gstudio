@@ -71,6 +71,7 @@ test_that("checking",{
   expect_that( dim(gst)[2], equals(5))
   expect_that( names(gst), is_equivalent_to( c("Locus","Gst","Hs","Ht","P")))
   expect_that( gst$Locus, is_equivalent_to( c("TPI","PGM","Multilocus")))
+  
 
 })
 
