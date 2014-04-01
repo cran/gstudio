@@ -98,7 +98,6 @@ test_that("testing",{
 
 
 
-
 context("Locus.R operators")
 test_that( "Operations", {
   AA <- locus( c("A","A") )

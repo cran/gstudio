@@ -14,6 +14,7 @@
 #'    \item{separated}{Pre-separated alleles (with ':').}
 #'    \item{snp}{Encoded by the number of minor alleles at the locus.}
 #'    \item{zyme}{Alleles like zymes (e.g., 12 for '1' and '2' alleles).}
+#'    \item{snp_prob}{A probabilistic snp call denoted as three posterior likelihoods for AA, AB, and BB as is often found in RAD-seq data.}
 #' }
 #' @param phased A flag indicating the the alleles should are of
 #'  known gametic phase (default=FALSE).
@@ -82,7 +83,7 @@ locus <- function( x, type, phased=FALSE ){
       else 
         ret <- locus( strsplit( x, split=":")[[1]], phased=phased)
     }
-      
+    
   } 
   
   else if( type == "zyme" ){
@@ -306,9 +307,10 @@ rep.locus <- function( x, times,... ){
 #' loci[2]
 #'
 `[.locus` <- function (x, i) {
-    y <- unclass(x)[i]
-    class(y) <- "locus"
-    return(y)  
+  y <- unclass(x)[i]
+  #class(y) <- "locus"
+  attributes(y) <- attributes(x)
+  return(y)  
 }
 
 
@@ -349,7 +351,7 @@ rep.locus <- function( x, times,... ){
          you can write your own routine.")
   n <- length(a1)/2
   off <- locus(  c( sample(a1, size=n, replace=FALSE),
-                   sample(a2, size=n, replace=FALSE)))
+                    sample(a2, size=n, replace=FALSE)))
   return(off)
 }
 
@@ -395,7 +397,7 @@ rep.locus <- function( x, times,... ){
     warning("Subtract missing locus objects.  Nothing subtracted.")
     return( e1 )
   }
-    
+  
   
   off <- alleles(e1)
   mom <- alleles(e2)
@@ -440,7 +442,7 @@ rep.locus <- function( x, times,... ){
     }
   }
   
-   
+  
 }
 
 

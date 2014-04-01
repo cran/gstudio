@@ -106,7 +106,21 @@ NULL
 #' @keywords data
 NULL
 
+#' CDPop Data
+#' 
+#' Example data set for CDPop input
+#' @name grid.csv
+#' @docType data
+#' @keywords data
+NULL
 
+#' SNP probability data
+#' 
+#' Example data for probabilistically calling snps
+#' @name snp_prob.csv
+#' @docType data
+#' @keywords data
+NULL
 
 
 
