@@ -25,7 +25,7 @@
 #' @return A \code{data.frame} with \code{locus} columns pre-formatted.
 #' @export
 #' @author Rodney J. Dyer \email{rjdyer@@vcu.edu}
-read_population <- function( path, type, locus.columns, phased=FALSE, sep=",", header=TRUE ) {
+read_population <- function( path, type, locus.columns, phased=FALSE, sep=",", header=TRUE) {
   if( !missing(type) && !(type %in% c("aflp","column","separated","snp","zyme","genepop")))
     stop("Unrecognized 'type' submitted to read_population()")
   # check for genepop and handle in its own 
@@ -46,7 +46,7 @@ read_population <- function( path, type, locus.columns, phased=FALSE, sep=",", h
   if( !is(locus.columns, "numeric") )
     stop("Invalid value passed as 'locus.columns'")  
   
-  df <- read.table(path, sep=sep,header=header,stringsAsFactors=FALSE)
+  df <- read.table(path, sep=sep,header=header, stringsAsFactors=FALSE)
   
   if( ncol(df)==1 )
     warning("Your data.frame has only 1 column, did you misspecify the 'sep' character?")    

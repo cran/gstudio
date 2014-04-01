@@ -36,6 +36,7 @@ parent_finder <- function( df, ID="ID", OffID="OffID"){
       }
     }
   }
+
   ret <- ret[ order( ret$ID, ret$OffID, -ret$T),]
   return( ret )
 }

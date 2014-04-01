@@ -1,23 +1,28 @@
 context("bad_parents.R")
 
 test_that("testing",{
-  freqs <- c(0.55, 0.30, 0.15, 0.34, 0.34, 0.32)
-  loci <- c(rep("TPI",3), rep("PGM",3))
-  alleles <- c(LETTERS[1:3],LETTERS[8:10])
-  f <- data.frame(Locus=loci, Allele=alleles, Frequency=freqs)
-  adults <- make_population(f,N=3)
-  offs <- mate( adults[1,], adults[2,], N=2)
-  offs$ID <- c(1,1)
-  offs$OffID <- 1:2
-  offs$TPI[2] <- locus(c("D","D"))
-  adults$OffID <- 0
+  ID <- c(1:4,rep(1,4))
+  OffID <- c(rep(0,4),1:4)
+  PGM <- c( locus(c(1,2)),
+            locus(c(1,1)),
+            locus(c(2,2)),
+            locus(c(1,2)),
+            locus(c(1,1)),
+            locus(c(2,2)),
+            locus(c(1,2)),
+            locus(c(3,3)))
+  df <- data.frame( ID, OffID, PGM )
+  p1 <- bad_parents(df)
   
-  data <- rbind( adults[,c(1,4,2,3)], offs[,c(1,4,2,3)])
-  data <- data[ order(data$ID, data$OffID),]
+  expect_that( p1, is_a("data.frame"))  
+  expect_that(names(p1),is_equivalent_to(c("ID","OffID","PossibleParent")))
+  expect_that(p1$ID, is_equivalent_to(as.character(rep(1,4))))
+  expect_that(p1$OffID, is_equivalent_to(as.character(1:4)))
+  expect_that(p1$PossibleParent, is_equivalent_to(c(T,T,T,F)))
   
-  p <- bad_parents( data )
-  expect_that(p,is_a("data.frame"))
-  expect_that(nrow(p),equals(2))
-  expect_that(ncol(p),equals(3))
-  expect_that(p$PossibleParent,is_equivalent_to(c(TRUE,FALSE)))
+  expect_that( bad_parents(),throws_error())
+  expect_that( bad_parents(df[,1:2]), throws_error())
+  expect_that( bad_parents(df,ID="Bob"), throws_error())
+  expect_that( bad_parents(df,OffID="Bob"), throws_error())
+  
 })

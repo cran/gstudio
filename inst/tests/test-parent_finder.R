@@ -8,6 +8,7 @@ test_that("testing",{
   
 
   
+
   p <- parent_finder( data )  
   expect_that( p, is_a("data.frame"))
   expect_that( nrow(p), equals(6) )

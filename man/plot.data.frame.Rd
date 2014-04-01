@@ -3,7 +3,7 @@
 \title{Plotting the locations of a 'population'}
 \usage{
 \method{plot}{data.frame}(x, stratum = "Population",
-  Longitude = "Longitude", Latitude = "Latitude", map.source = "google",
+  longitude = "Longitude", latitude = "Latitude", map.source = "google",
   map.type = "terrain", color = "black", zoom = NA, ...)
 }
 \arguments{
@@ -12,10 +12,10 @@
   \item{stratum}{The stratum to plot
   (default='Population').}
 
-  \item{Longitude}{Name of the column to be used as a
+  \item{longitude}{Name of the column to be used as a
   decimal longitude}
 
-  \item{Latitude}{Name of the column to be used as decimal
+  \item{latitude}{Name of the column to be used as decimal
   latitude}
 
   \item{map.source}{Where the map should be retrieved from.

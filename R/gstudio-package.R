@@ -34,7 +34,9 @@
 #' @author Rodney J. Dyer \email{rjdyer@@vcu.edu}
 #' @docType package
 #' @keywords package
-#' @import raster ggplot2 
+#' @import raster 
+#' @import ggplot2 
+#' @import ggmap
 #' @name gstudio-package
 #' @rdname gstudio-package
 #'
@@ -95,6 +97,15 @@ NULL
 #' @docType data
 #' @keywords data
 NULL
+
+#' Cornus mom/offspring data set
+#' 
+#' Example data set for demonstrating parent/offspring data
+#' @name cornus_florida
+#' @docType data
+#' @keywords data
+NULL
+
 
 
 
